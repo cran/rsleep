@@ -24,9 +24,9 @@ file, while events are stored in the Comma-Separated Values (CSV) file,
 
 ``` r
 
-download.file("http://cloud.frenchkpi.com/s/65cm6DMq7SYKQ6J/download", "15012016HD.edf")
+download.file("https://osf.io/57j2u/download", "15012016HD.edf", method="curl")
 
-download.file("http://cloud.frenchkpi.com/s/wreGqkitWNnWwnP/download", "15012016HD.csv")
+download.file("https://osf.io/h4ysj/download", "15012016HD.csv", method="curl")
 ```
 
 ## Records manipulation

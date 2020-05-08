@@ -4,8 +4,15 @@
 \alias{detect_rpeaks}
 \title{Detects R peaks in raw ECG signal.}
 \usage{
-detect_rpeaks(signal, sRate, lowcut = 0, highcut = 15,
-  filter_order = 1, integration_window = 15, refractory = 200)
+detect_rpeaks(
+  signal,
+  sRate,
+  lowcut = 0,
+  highcut = 15,
+  filter_order = 1,
+  integration_window = 15,
+  refractory = 200
+)
 }
 \arguments{
 \item{signal}{Numerical vector of ECG signal.}

@@ -4,9 +4,8 @@
 \name{example_hypnogram_30s}
 \alias{example_hypnogram_30s}
 \title{Example hypnogram scored on 30 seconds.}
-\format{Dataframe}
-\source{
-\url{http://cloud.frenchkpi.com/s/wreGqkitWNnWwnP/download}
+\format{
+Dataframe
 }
 \usage{
 example_hypnogram_30s

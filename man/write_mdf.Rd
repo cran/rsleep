@@ -6,8 +6,7 @@
 Target directory is erased if it already exists. Signals are stored in binary file,
 events and metadata in JavaScript Object Notation (JSON) files.}
 \usage{
-write_mdf(edfPath, mdfPath, channels = c(NA), events = c(),
-  endian = "little")
+write_mdf(edfPath, mdfPath, channels = c(NA), events = c(), endian = "little")
 }
 \arguments{
 \item{edfPath}{character. European Data Format (EDF) file path.}
@@ -24,22 +23,6 @@ write_mdf(edfPath, mdfPath, channels = c(NA), events = c(),
 Write a European Data Format (EDF) record file to disk using Morpheo Data Format (MDF) guidelines.
 Target directory is erased if it already exists. Signals are stored in binary file,
 events and metadata in JavaScript Object Notation (JSON) files.
-}
-\examples{
-\donttest{
-download.file("http://cloud.frenchkpi.com/s/65cm6DMq7SYKQ6J/download",
-paste0(tempdir(),"/15012016HD.edf"))
-download.file("http://cloud.frenchkpi.com/s/wreGqkitWNnWwnP/download",
-paste0(tempdir(),"15012016HD.csv"))
-mdfPath = paste0(tempdir(),"/15012016HD/")
-channels = c("C3-M2","ECG")
-events = read_events_noxturnal(paste0(tempdir(),"15012016HD.csv"))
-write_mdf(paste0(tempdir(),"/15012016HD.edf"),
-    mdfPath,
-    channels,
-    events
-)
-}
 }
 \references{
 P. Bouchequet, D. Jin, G. Solelhac, M. Chennaoui, D. Leger, "Morpheo Data Format (MDF), un nouveau format de données simple, robuste et performant pour stocker et analyser les enregistrements de sommeil", Médecine du Sommeil, vol. 15, n 1, p. 48/49, march 2018.
