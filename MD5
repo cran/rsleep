@@ -1,9 +1,9 @@
-e17b5f4fd7c0ff731e8755b3f5ad887a *DESCRIPTION
+233da33b73cac258952fc42ff3cbb6d9 *DESCRIPTION
 28eeb21923623a0b5fb46f4089f548ed *LICENSE
 8b54e5a89fbda3af5e077053d40bec76 *NAMESPACE
 883cd904919b6b081741b41ed25c0249 *R/data.R
 f9295e3a668b9179ba0715be5d3eecfc *R/ecg.R
-348d10966dd8d831a8db567cc6e9810d *R/eeg.R
+41eb129ce971d0790f0be949d9ac8488 *R/eeg.R
 f5099e70fc06626f6ffc9f870004e4a9 *R/epochs.R
 5079fceb727805c20f8c733a85b4ff9b *R/events.R
 40e2d6154002e59adcc5e186e32bc0c0 *R/files.R
@@ -24,6 +24,8 @@ deefffe96c325075b6d62df41c13864f *man/figures/README-spectrogram-1.png
 1bf51d741596a336b993545c2f214490 *man/hypnogram.Rd
 582b5073cd7bd5babb391d29556a44a0 *man/normalize_cycles.Rd
 47d3686b7b858a25127f01b3d35ca11e *man/plot_hypnogram.Rd
+9a2d7cc0c3eef7e7d3d1076346310e53 *man/psm.Rd
+25919d48daf50229c3ab3f200d308fca *man/pwelch.Rd
 f32d19d7584f1c320bef28e7743ec59c *man/read_events_noxturnal.Rd
 94bf5d56f08d1df7172b27a7e162eeae *man/read_mdf.Rd
 eb4d8c376ddbfadd6d374954d3993a16 *man/spectrogram.Rd
@@ -36,7 +38,7 @@ fd9562c9d2ececda2fdfe6773a74d104 *tests/testthat/data/noxturnal_events_example_u
 db2de863e6ded88ccabb27f758672a0c *tests/testthat/data/noxturnal_events_example_unicode_3.csv
 be3d53cb1a0e9475d33134740cebc308 *tests/testthat/data/subject1.edf
 f9d5c5c9dd94c843214b0b7f9671718a *tests/testthat/test_ecg.R
-48501b34f838f4e83ad5c9e134cde9e0 *tests/testthat/test_eeg.R
+3ae285adc8dbe16136932fb821e358e7 *tests/testthat/test_eeg.R
 eb3bcb418057531a15f2fce61eaaaa41 *tests/testthat/test_epochs.R
 fa14035fc861ee13cff0541c28cc3db3 *tests/testthat/test_events.R
 a65cb3dc69f2b9cc94248f79af7b620c *tests/testthat/test_files.R

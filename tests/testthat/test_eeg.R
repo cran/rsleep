@@ -34,3 +34,11 @@ test_that("Bands", {
 
   expect_equal(length(bands),2)
 })
+
+test_that("psd", {
+  x <- sin(c(1:10000))
+  psd <- psm(x, 200, 100)
+  expect_equal(as.character(psd[[2]][49]),"48.022538298763")
+  psd <- pwelch(x, 200, 100)
+  expect_equal(as.character(psd[[2]][49]),"-14.6969137350995")
+})
