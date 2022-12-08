@@ -41,7 +41,9 @@ spectrogram <- function(signal,
 
   suppressWarnings(
     spec$S <- apply(spec$S,2,function(x){
-      stats::aggregate(stats::ts(as.numeric(x), frequency=freq), 1, max)
+      stats::aggregate(
+        stats::ts(
+          as.numeric(x), frequency=freq), 1, max)
     }))
 
   spec$f <- as.numeric(stats::aggregate(stats::ts(spec$f, frequency=freq), 1, max))

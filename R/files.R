@@ -217,4 +217,100 @@ read_mdf <- function(mdfPath, channels = c(NA), metadata = TRUE) {
   return(mdf)
 }
 
+#' Write a XML file containing scored stages for Compumedics software.
+#'
+#' @param hypnogram A rsleep hypnogram dataframe.
+#' @param filename character File name to write on disk.
+#' @export
+write_hypnogram_compumedics <- function(hypnogram, filename){
+  
+  header <- paste0(
+    "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+    "<CMPPSGSCOREDATA><AUTHOR>Compumedics</AUTHOR><CREATEDON>",
+    as.character(format(Sys.time(),"%m/%d/%Y %H:%M%:%S")),
+    "</CREATEDON><LASTMODIFIEDBY>Compumedics</LASTMODIFIEDBY><LASTMODIFIEDON>",
+    as.character(format(Sys.time(),"%m/%d/%Y %H:%M%:%S")),
+    "</LASTMODIFIEDON><MODE>1</MODE><COMMENTS>souris1</COMMENTS>",
+    "<SCOREDEVENTS/><SLEEPSTAGES>")
+  
+  stages <- hypnogram$event
+  stages <- ifelse(stages == "NREM", "1",stages)
+  stages <- ifelse(stages == "AWA", "10",stages)
+  stages <- ifelse(stages == "REM", "2",stages)
+  stages <- paste0("<SLEEPSTAGE>",stages,"</SLEEPSTAGE>")
+  stages <- paste0(stages,collapse = "")
+  
+  footer <- "</SLEEPSTAGES></CMPPSGSCOREDATA>"
+  
+  xml <- paste0(header, stages, footer, collapse = "")
+  
+  fileConn <- file(filename)
+  writeLines(xml, fileConn)
+  close(fileConn)
+  
+}
+
+#' Read a SleepEDFX events file EDF+
+#'
+#' @param dir EDF+ path
+#' @param update merge N3 and N4 or not
+#' @return A dataframe of scored events.
+#' @export
+read_events_sleepedfx <- function(dir, update = TRUE){
+  
+  h <- edfReader::readEdfHeader(dir)
+  s <- edfReader::readEdfSignals(h)
+  events <- s[["annotations"]]
+  events$begin <- events$onset + as.numeric(s[["startTime"]])
+  events$end <- events$end + as.numeric(s[["startTime"]])
+  events$event[events$annotation == "Sleep stage W"] <- "AWA"
+  events$event[events$annotation == "Sleep stage 1"] <- "N1"
+  events$event[events$annotation == "Sleep stage 2"] <- "N2"
+  events$event[events$annotation == "Sleep stage 3"] <- "N3"
+  events$event[events$annotation == "Sleep stage 4"] <- "N4"
+  events$event[events$annotation == "Sleep stage R"] <- "REM"
+  events <- events[,c("begin","end","event")]
+  events_final <- utils::head(events,0)
+  events <- events[order(events$begin),]
+  events$duration <- events$end - events$begin
+  events$epochs <- events$duration/30
+  
+  begin <- min(events$begin)
+  for(i in c(1:nrow(events))){
+    for(j in c(1:events[i,]$epochs)){
+      end <- begin + 30
+      events_final[nrow(events_final)+1,] <- list(begin,end,events[i,]$event)
+      begin <- begin + 30
+    }
+  }
+  
+  if(update){
+    events_final$event[events_final$event == "N4"] <- "N3"
+  }
+  
+  events_final$begin <- as.POSIXlt(events_final$begin,origin= "1970-01-01 00:00.00 UTC")
+  events_final$end <-  as.POSIXlt(events_final$end,origin= "1970-01-01 00:00.00 UTC")
+  
+  return(stats::na.omit(events_final))
+}
+
+#' Read a stages exports from Compumedics software
+#'
+#' @param txt txt file path
+#' @param startTime Character string or date object of the hypnogram start.
+#' @return A dataframe of stages.
+#' @export
+read_stages_compumedics <- function(txt, startTime){
+  hypno <- utils::read.table(txt, stringsAsFactors = FALSE, col.names = "event")
+  hypno$begin <- as.POSIXlt(startTime) + ((c(1:nrow(hypno))-1)*4)
+  hypno$end <- hypno$begin+4
+  hypno$event <- as.character(hypno$event)
+  hypno$event <- ifelse(hypno$event == "0","AWA",hypno$event)
+  hypno$event <- ifelse(hypno$event == "1","NREM",hypno$event)
+  hypno$event <- ifelse(hypno$event == "2","REM",hypno$event)
+  hypno$event <- ifelse(hypno$event == "?","AWA",hypno$event)
+  hypno
+}
+
+
 

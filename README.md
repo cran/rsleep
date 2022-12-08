@@ -266,7 +266,7 @@ Researchers. (n.d.).
 \[5\] J.R. Knott, F.A. Gibbs, C.E. Henry, Fourier transforms of the
 electroencephalogram during sleep., Journal of Experimental Psychology.
 31 (1942) 465–477.
-doi:[10.1037/h0058545](https://doi.org/10.1037/h0058545).
+doi:10.1037/h0058545
 
 </div>
 
@@ -274,7 +274,7 @@ doi:[10.1037/h0058545](https://doi.org/10.1037/h0058545).
 
 \[6\] J. Pan, W.J. Tompkins, A Real-Time QRS Detection Algorithm, IEEE
 Transactions on Biomedical Engineering. BME-32 (1985) 230–236.
-doi:[10.1109/TBME.1985.325532](https://doi.org/10.1109/TBME.1985.325532).
+doi:[10.1109/TBME.1985.325532](https://ieeexplore.ieee.org/document/4122029).
 
 </div>
 
