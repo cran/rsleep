@@ -4,7 +4,7 @@
 \alias{score_mice}
 \title{Score mice sleep from European Data Format (EDF) files.}
 \usage{
-score_mice(edf, model = schwabedal2018(), verbose = TRUE)
+score_mice(edf, model, verbose = TRUE)
 }
 \arguments{
 \item{edf}{Character. European Data Format (EDF) file path.}

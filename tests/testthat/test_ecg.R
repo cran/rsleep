@@ -1,6 +1,11 @@
 context("ECG signal functions testing")
 
 test_that("Peak detection", {
-  peaks <- detect_rpeaks(example_ecg_200hz, 200)
-  expect_equal(length(peaks), 9)
+  
+  path <- paste0(tempdir(),"rec_1.dat")
+  download.file("https://physionet.org/files/ecgiddb/1.0.0/Person_01/rec_1.dat?download",path)
+  ecg <- readBin(path,integer(),500*30)
+  unlink(path)
+  peaks <- detect_rpeaks(ecg, sRate = 500)
+  
 })

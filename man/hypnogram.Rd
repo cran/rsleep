@@ -2,24 +2,44 @@
 % Please edit documentation in R/events.R
 \name{hypnogram}
 \alias{hypnogram}
-\title{Filter and reorder an events dataframe to keep only sleep stages related-events.}
+\title{Filter and reorder an events dataframe or a hypnodensity to keep only sleep stages related-events.}
 \usage{
-hypnogram(events, labels = c("N3", "N2", "N1", "REM", "AWA"))
+hypnogram(
+  events,
+  labels = c("N3", "N2", "N1", "REM", "AWA"),
+  startTime = 946681200,
+  epoch_duration = 30,
+  plot = FALSE
+)
 }
 \arguments{
 \item{events}{Events dataframe. Dataframe must have \code{begin} (\code{POSIXt}), \code{end} (\code{POSIXt}) and \code{event}}
 
 \item{labels}{Sleep stages labels. Defaults to \code{c("N3","N2","N1","REM","AWA")}.}
+
+\item{startTime}{Hypnogram start time. Used when a hypnodensity dataframe is passed as events. Defaults to 946681200.}
+
+\item{epoch_duration}{Epoch duration in seconds. Used when a hypnodensity dataframe is passed as events. Defaults to 30.}
+
+\item{plot}{Plot the hypnogram or in not using \code{ggplot2}.}
 }
 \value{
-hypnogram dataframe.
+Hypnogram dataframe or plot.
 }
 \description{
 Remove non-sleep stages events and reorder dataframe rows using the \code{begin} column.
 }
 \examples{
-e <- data.frame(begin = as.POSIXlt(c(1536967800,1536967860,1536967830),origin = "1970-01-01"))
-e$end <- as.POSIXlt(c(1536967830,1536967890,1536967860), origin = "1970-01-01")
-e$event = c("back-position","N3","REM")
-hypnogram(e)
+fpath <- paste0(tempdir(),"SC4001EC-Hypnogram.edf")
+
+furl <- paste0("https://www.physionet.org/files/sleep-edfx/1.0.0/",
+ "sleep-cassette/SC4001EC-Hypnogram.edf?download")
+ 
+download.file(furl,fpath)
+
+events <- read_events_sleepedfx(fpath)
+
+unlink(fpath)
+
+hypnogram(events, plot = TRUE)
 }

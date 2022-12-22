@@ -4,21 +4,23 @@
 \alias{pwelch}
 \title{Power spectral density using Welch's method.}
 \usage{
-pwelch(x, sRate, points = 0, overlap = 0, padding = 0)
+pwelch(x, sRate, points = 0, overlap = 0, padding = 0, show = TRUE)
 }
 \arguments{
 \item{x}{Signal vector.}
 
 \item{sRate}{Sample rate of the signal.}
 
-\item{points}{Number of samples.}
+\item{points}{todo}
 
-\item{overlap}{Windows overlap.}
+\item{overlap}{todo}
 
-\item{padding}{Windows padding.}
+\item{padding}{todo}
+
+\item{show}{todo}
 }
 \value{
-A raw periodogram dataframe.
+peridodogram plotted or raw
 }
 \description{
 Power spectral density using Welch's method.

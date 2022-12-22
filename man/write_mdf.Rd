@@ -2,11 +2,15 @@
 % Please edit documentation in R/files.R
 \name{write_mdf}
 \alias{write_mdf}
-\title{Write a European Data Format (EDF) record file to disk using Morpheo Data Format (MDF) guidelines.
-Target directory is erased if it already exists. Signals are stored in binary file,
-events and metadata in JavaScript Object Notation (JSON) files.}
+\title{Write a European Data Format (EDF) record file to disk using Morpheo Data Format (MDF) guidelines}
 \usage{
-write_mdf(edfPath, mdfPath, channels = c(NA), events = c(), endian = "little")
+write_mdf(
+  edfPath,
+  mdfPath,
+  channels = c(NA),
+  events = c(),
+  endian = .Platform$endian
+)
 }
 \arguments{
 \item{edfPath}{character. European Data Format (EDF) file path.}
@@ -17,12 +21,10 @@ write_mdf(edfPath, mdfPath, channels = c(NA), events = c(), endian = "little")
 
 \item{events}{dataframe. Events dataframe to write. Events dataframe. Dataframe must contain \code{begin} (\code{POSIXt}), \code{end} (\code{POSIXt}) and \code{event} (\code{character}) columns.}
 
-\item{endian}{character. Endianess. \code{"big"} or \code{"little"}. Defaults to \code{"little"}.}
+\item{endian}{character. Endianess. \code{"big"} or \code{"little"}. Defaults to platform endian.}
 }
 \description{
-Write a European Data Format (EDF) record file to disk using Morpheo Data Format (MDF) guidelines.
-Target directory is erased if it already exists. Signals are stored in binary file,
-events and metadata in JavaScript Object Notation (JSON) files.
+Write a European Data Format (EDF) record file to disk using Morpheo Data Format (MDF) guidelines. Target directory is erased if it already exists. Signals are stored in binary file, events and metadata in JavaScript Object Notation (JSON) files.
 }
 \references{
 P. Bouchequet, D. Jin, G. Solelhac, M. Chennaoui, D. Leger, "Morpheo Data Format (MDF), un nouveau format de données simple, robuste et performant pour stocker et analyser les enregistrements de sommeil", Médecine du Sommeil, vol. 15, n 1, p. 48/49, march 2018.

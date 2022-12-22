@@ -9,7 +9,7 @@ spectrogram(
   sRate,
   maxFreq = 25,
   n = 1024,
-  window = n * 2,
+  window = n,
   overlap = 0,
   cols = c(rep("#3B9AB2", 9), "#78B7C5", "#EBCC2A", "#E1AF00", rep("#F21A00", 6)),
   freq = 4,
@@ -26,7 +26,7 @@ spectrogram(
 
 \item{n}{The size of the Fourier transform window.}
 
-\item{window}{Shape of the fourier transform window, defaults to n*2.}
+\item{window}{Shape of the fourier transform window, defaults to n.}
 
 \item{overlap}{Overlap with previous window, defaults to 0.}
 

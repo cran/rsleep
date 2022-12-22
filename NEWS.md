@@ -1,3 +1,28 @@
+# rsleep 1.0.6
+
+  * Following efforts towards merge between Github and CRAN versions.
+  * Renamed `read_stages_compumedics` function to `read_events_compumedics`.
+  * Added `read_events_profusion` function to read annotations from NSRR.
+  * Added `xml2` package to dependencies.
+  * Added `tst90` function.
+  * `hypnogram` function can now take hypnodensity to convert to hypnogram and plot it if asked with the `plot` parameter.
+  * Added `transitions` function to compute matrices of stages transitions.
+  
 # rsleep 1.0.5
 
-This release adds a few functions already available in the devel version on Github.
+  * This release adds a few functions already available in the devel version on Github.
+
+# rsleep 1.0.2
+
+  * `epochs` function can take a single vector containing a single signal. 
+  `resample` default to the max of the sample rates.
+  * Added padding parameter to `epochs` function. Pads epochs with previous and next epochs of the record.
+  * `bands_power` renamed to `bands_psd`.
+  * `bands_psd` does not normalize by band size anymore.
+  * In `bands_psd`, broadband argument renamed to normalize. Can be set up to FALSE.
+  * Spectral analysis & File management vignettes.
+  * Write function `write_mdf` & `write_channel` use platform endian by default to write binary files.
+  * Added automatic sleep staging functions and vignette.
+  * Added `read_stages_compumedics()` and `write_hypnogram_compumedics()` functions.
+  * Removed `examples example_ecg_200hz` and `example_hypnogram_30s`.
+  * Added `smooth_hypnogram()` and `smooth_liang2012()`

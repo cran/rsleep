@@ -22,6 +22,13 @@ test_that("Test", {
                            sRates = c(100,100),
                            resample = 100,
                            epoch = 1,
+                           startTime = 0,
+                           padding = 2)
+
+  # Single vector
+  epochs <- rsleep::epochs(signals = sig,
+                           sRates = 100,
+                           epoch = 1,
                            startTime = 0)
 
   expect_error(rsleep::epochs(signals = list(sig,sig),

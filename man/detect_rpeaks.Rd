@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecg.R
 \name{detect_rpeaks}
 \alias{detect_rpeaks}
-\title{Detects R peaks in raw ECG signal.}
+\title{Detect R peaks in a raw ECG signal.}
 \usage{
 detect_rpeaks(
   signal,
@@ -11,7 +11,8 @@ detect_rpeaks(
   highcut = 15,
   filter_order = 1,
   integration_window = 15,
-  refractory = 200
+  refractory = 200,
+  return_index = FALSE
 )
 }
 \arguments{
@@ -28,16 +29,30 @@ detect_rpeaks(
 \item{integration_window}{Convolution window size.}
 
 \item{refractory}{Minimal space between peaks in milliseconds.}
+
+\item{return_index}{If TRUE, the index for each R peak is returned instead of the timing.}
 }
 \value{
-A vector of each detected R peaks in seconds from the start.
+A numeric vector of detected R peaks, expressed in seconds* from the start of the signal. This vector can be used in RHRV using `RHRV::LoadBeatVector()`.
+
+*(or samples if return_index is TRUE)
 }
 \description{
-Implements the first part of the Pan & Tompkins algorithms to detect R peaks from a raw ECG signal. Inspiration from https://zenodo.org/record/826614.
+`detect_rpeaks` implements the first part of the Pan & Tompkins algorithms to detect R peaks from a raw ECG signal.
 }
 \examples{
-data("example_ecg_200hz")
-detect_rpeaks(example_ecg_200hz, 200)
+path <- paste0(tempdir(),"rec_1.dat")
+download.file("https://physionet.org/files/ecgiddb/1.0.0/Person_01/rec_1.dat?download",path)
+ecg <- readBin(path,integer(),500*30)
+peaks <- detect_rpeaks(ecg, sRate = 500)
+unlink(path)
+print(peaks)
+
+ecg.df <- data.frame(ECG = ecg,Seconds = c(1:length(ecg))/500)
+library(ggplot2)
+ggplot(ecg.df,aes(x = Seconds,y = ECG)) +
+  geom_line() + theme_bw() +
+  geom_vline(data.frame(p = peaks),mapping = aes(xintercept = p), linetype="dashed",color = "red")
 }
 \references{
 Pan, Jiapu, and Willis J. Tompkins. "A real-time QRS detection algorithm." IEEE Trans. Biomed. Eng 32, no. 3 (1985): 230-236.

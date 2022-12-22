@@ -1,22 +1,3 @@
-#' Check events dataframe.
-#'
-#' @param e Events dataframe. Dataframe must have \code{begin} (\code{POSIXt}), \code{end} (\code{POSIXt}) and \code{event} (\code{character}) columns.
-check_events <- function(e){
-  if(!("begin" %in% colnames(e))){
-    stop("Events dataframe must contain a 'begin' column.")
-  } else if(!("end" %in% colnames(e))){
-    stop("Events dataframe must contain a 'end' column.")
-  } else  if(!("event" %in% colnames(e))){
-    stop("Events dataframe must contain a 'event' column.")
-  } else if(!("POSIXt" %in% class(e$begin))){
-    stop("'begin' column must be a datetime.")
-  } else if(!("POSIXt" %in% class(e$end))){
-    stop("'end' column must be a datetime.")
-  } else if(!("character" %in% class(e$event))){
-    stop("'events' column must be character type.")
-  }
-}
-
 #' Get stages events related stats in a named vector.
 #'
 #' \code{stages_stats} computes stages related stats.
@@ -81,4 +62,26 @@ stages_stats <- function(e){
   r[["waso"]] <- r[["tsp"]] - r[["latency"]] - r[["tts"]]
 
   r
+}
+
+#' Compute TST90, the percentage of time during sleep with an oxygen saturation below 90.
+#' @param spo2_signal The SpO2 signal vector.
+#' @param sRate The SpO2 signal vector sample rate.
+#' @param startTime The SpO2 signal start time.
+#' @param hypnogram Events dataframe containing hypnogram.
+#' @export
+tst90 <- function(
+    spo2_signal, 
+    sRate,
+    startTime,
+    hypnogram){
+  periods <- rsleep::get_sleep_periods(hypnogram)
+  u90 <- 0
+  for(i in c(1:nrow(periods))){
+    x <- as.numeric(difftime(periods[i,]$begin, startTime, units="secs"))
+    y <- as.numeric(difftime(periods[i,]$end, startTime, units="secs"))
+    signal <- spo2_signal[(x*sRate):(y*sRate)]
+    u90 <- u90 + (length(signal[signal<90])/sRate)
+  }
+  return(u90/sum(periods$duration))
 }

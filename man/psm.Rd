@@ -4,7 +4,7 @@
 \alias{psm}
 \title{Power spectral density using adaptive sine multitaper.}
 \usage{
-psm(x, sRate, length = 0)
+psm(x, sRate, length = 0, show = TRUE)
 }
 \arguments{
 \item{x}{Signal vector.}
@@ -12,9 +12,11 @@ psm(x, sRate, length = 0)
 \item{sRate}{Sample rate of the signal.}
 
 \item{length}{periodogram resolution. 0 default to not resize.}
+
+\item{show}{todo}
 }
 \value{
-A raw periodogram dataframe.
+peridodogram plotted or raw.
 }
 \description{
 Power spectral density using adaptive sine multitaper.

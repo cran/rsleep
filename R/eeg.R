@@ -5,7 +5,7 @@
 #' @param sRate Signal sample rate in Hertz.
 #' @param maxFreq Maximal frequency to plot in Hertz. Signal will be resampled at maxFreq*2 sample rate.
 #' @param n The size of the Fourier transform window.
-#' @param window Shape of the fourier transform window, defaults to n*2.
+#' @param window Shape of the fourier transform window, defaults to n.
 #' @param overlap Overlap with previous window, defaults to 0.
 #' @param cols Color scale used for the underlying plot function.
 #' @param freq Aggregate frequency used to lower spectrogram resolution. Defaults to 4.
@@ -20,7 +20,7 @@ spectrogram <- function(signal,
                         sRate,
                         maxFreq = 25,
                         n = 1024,
-                        window = n*2,
+                        window = n,
                         overlap = 0,
                         cols = c(rep("#3B9AB2",9),"#78B7C5","#EBCC2A","#E1AF00",rep("#F21A00",6)),
                         freq = 4,
@@ -41,9 +41,7 @@ spectrogram <- function(signal,
 
   suppressWarnings(
     spec$S <- apply(spec$S,2,function(x){
-      stats::aggregate(
-        stats::ts(
-          as.numeric(x), frequency=freq), 1, max)
+      stats::aggregate(stats::ts(as.numeric(x), frequency=freq), 1, max)
     }))
 
   spec$f <- as.numeric(stats::aggregate(stats::ts(spec$f, frequency=freq), 1, max))
@@ -58,26 +56,45 @@ spectrogram <- function(signal,
   }
 }
 
-#' Computes spectral power of bands listed in the bands argument.
+#' Compute power spectral density of bands listed in the bands argument.
 #'
-#' @description `bands_power` calculates power spectral densities estimates using Welch's method on bands. Bands are computed from spectrogram bands equal or greater than lower limit and inferior to the upper limit.
-#' @param bands A list of bands to compute with lower and upper limits in the form `list(c(0,4),c(4,8))``
+#' @description `bands_psd` calculates power spectral densities estimates on bands. Bands are computed from spectrogram bands equal or greater than lower limit and inferior to the upper limit.
 #' @param signal Numerical vector of the signal.
 #' @param sRate Signal sample rate in Hertz.
-#' @param broadband The broadband to normalize by.
+#' @param bands A list of bands to compute with lower and upper limits in the form `list(c(0,4),c(4,8))``
+#' @param normalize A band to normalize (divide) by. Defaults to `c(0.5,40)`. Can be set up to FALSE for raw results. Defaults to FALSE.
+#' @param method Character. Method to use to compute power spectral density. "pwelch" or "psm". Defaults to "pwelch".
 #' @return A list of bands powers.
 #' @examples
-#' bands_power(bands = list(c(0,4),c(4,8)),signal = sin(c(1:10000)),sRate = 200)
+#' signal <- sin(seq(0,100,0.01))
+#' bands_psd(bands = list(c(0,4),c(4,8)), signal = signal, sRate = 200)
 #' @export
-bands_power <- function(bands, signal , sRate, broadband = c(0.5,40)){
+bands_psd <- function(
+  signal,
+  sRate,
+  bands,
+  normalize = FALSE,
+  method= "pwelch"){
 
-  s <- phonTools::pwelch(sound = signal,fs = sRate,points = 1000, show = FALSE)
-  s[,2] <- s[,2]+abs(min(s[,2]))
+  if(method == "pwelch"){
+    s <- pwelch(x = signal, sRate = sRate, points = 1000, show = FALSE)
+  } else if(method == "psm"){
+    s <- psm(x = signal, sRate = sRate, show = FALSE)
+  } else{
+    stop("Choose between \"pwelch\" and \"psm\" for psd estimation method.")
+  }
 
   lapply(bands, function(band){
-    s_filtered <- s[s[,1] >= band[1] & s[,1] < band[2],]
-    s_broadband <- s[s[,1] >= broadband[1] & s[,1] < broadband[2],]
-    (sum(s_filtered[,2])/dim(s_filtered)[1])/sum(s_broadband[,2])
+
+    s_filtered <-  s[s$hz >= band[1] & s$hz < band[2],]
+
+    if(length(normalize) == 2){
+      s_broadband <- s[s$hz >= normalize[1] & s$hz < normalize[2],]
+      sum(s_filtered$psd)/sum(s_broadband$psd)
+    } else {
+      sum(s_filtered$psd)
+    }
+
   })
 }
 
@@ -87,21 +104,22 @@ bands_power <- function(bands, signal , sRate, broadband = c(0.5,40)){
 #' @references Welch, P. “The Use of Fast Fourier Transform for the Estimation of Power Spectra: A Method Based on Time Averaging over Short, Modified Periodograms.” IEEE Transactions on Audio and Electroacoustics 15, no. 2 (June 1967): 70–73. https://doi.org/10.1109/TAU.1967.1161901.
 #' @param x Signal vector.
 #' @param sRate Sample rate of the signal.
-#' @param points Number of samples.
-#' @param overlap Windows overlap.
-#' @param padding Windows padding.
-#' @return A raw periodogram dataframe.
+#' @param points todo
+#' @param overlap todo
+#' @param padding todo
+#' @param show todo
+#' @return peridodogram plotted or raw
 #' @examples
 #' x <- sin(c(1:10000))
 #' psd <- pwelch(sin(c(1:10000)), 200)
 #' head(psd)
 #' @export
-pwelch <- function(
-  x,
-  sRate,
-  points = 0,
-  overlap = 0,
-  padding = 0){
+  pwelch <- function(x,
+                   sRate,
+                   points = 0,
+                   overlap = 0,
+                   padding = 0,
+                   show = TRUE){
   n = length(x)
   if (points == 0)
     points = ceiling(n/10)
@@ -124,7 +142,12 @@ pwelch <- function(
   psd = log(psd)
   psd = psd - max(psd)
   hz = seq(0, sRate/2, length.out = (n/2) + 1)
-  return(data.frame("hz" = hz, "psd" = psd))
+  if (show == TRUE)
+    graphics::plot(hz, psd, type = "l", ylab = "PSD",
+         xlab = "Hz",
+         xaxs = "i")
+  invisible(data.frame("hz" = hz,
+            "psd" = psd))
 }
 
 #' Power spectral density using adaptive sine multitaper.
@@ -134,14 +157,15 @@ pwelch <- function(
 #' @param x Signal vector.
 #' @param sRate Sample rate of the signal.
 #' @param length periodogram resolution. 0 default to not resize.
-#' @return A raw periodogram dataframe.
+#' @param show todo
+#' @return peridodogram plotted or raw.
 #' @examples
 #' x <- sin(c(1:10000))
 #' psd <- psm(x, 200, 100)
 #' head(psd)
 #' @export
-psm <- function(x, sRate, length=0){
-  
+psm <- function(x, sRate, length=0, show = TRUE){
+
   options(psd.ops=list(
     tapmin = 1,
     tapcap = 1000,
@@ -159,28 +183,32 @@ psm <- function(x, sRate, length=0){
       n.orig = "len_orig"
     )
   ))
-  
+
   res <- psd::pspectrum(x,plot=FALSE,verbose=FALSE)
-  
+
   df <- data.frame("hz" = res$freq, "psd" = res$spec)
-  
+
   df$psd <- log(df$psd)
-  
+
   df$hz <- df$hz*sRate
-  
+
   if(length > 0){
-    
+
     psd <- signal::resample(x = df$psd,
                             p = length,
                             q = nrow(df))
-    
+
     hz <- signal::resample(x = df$hz,
                            p = length,
                            q = nrow(df))
-    
+
     df <- data.frame("psd" = psd,
                      "hz" = hz)
   }
-  
-  return(df)
+
+  if (show == TRUE)
+    graphics::plot(df$hz, df$psd, type = "l", ylab = "PSD",
+                   xlab = "Hz",
+                   xaxs = "i")
+  invisible(df)
 }
