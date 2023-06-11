@@ -2,12 +2,12 @@
 % Please edit documentation in R/events.R
 \name{transitions}
 \alias{transitions}
-\title{Compute a matrix of stages transitions counts.}
+\title{Count and format stages transitions.}
 \usage{
 transitions(
   hypnogram,
   stages = c("AWA", "REM", "N1", "N2", "N3"),
-  plot = FALSE
+  format = "vector"
 )
 }
 \arguments{
@@ -15,13 +15,13 @@ transitions(
 
 \item{stages}{Stages to include in transitions Defaults to \code{c("N1", "N2", "N3", "N4", "REM")}.}
 
-\item{plot}{Plot the transition matrix or not. Takes \code{"heatmap"} to plot a heatmap of transitions or \code{FALSE} to return the matrix as a dataframe without plotting it.}
+\item{format}{Set the return format. 'vector', 'dataframe' or 'heatmap'.}
 }
 \value{
-A matrix with count of stages transitions, or a plot.
+Count of stages transitions in selected format.
 }
 \description{
-Compute a matrix of stages transitions counts.
+Count and format stages transitions.
 }
 \examples{
 download.file("https://rsleep.org/data/hypnodensity.csv", "hypnodensity.csv")
@@ -32,5 +32,26 @@ unlink("hypnodensity.csv")
 
 events <- hypnogram(hypnodensity)
 
-transitions(events, plot = "heatmap")
+transitions(events)
+
+transitions(events, format = "dataframe")
+
+transitions(events, format = "heatmap")
+
+events <- data.frame(event = c(
+  "AWA","N1","N2","N2", "N3","N3",
+  "REM","N2","REM","REM", "N2","REM","AWA"))
+
+events$begin <- as.POSIXlt(seq(from = 0, to = 30*(nrow(events)-1), by = 30),origin = "1970-01-01")
+
+events$end <- as.POSIXlt(seq(from = 30, to = 30*nrow(events), by = 30), origin = "1970-01-01")
+
+transitions(events)
+
+transitions(events, format = "dataframe")
+
+transitions(events, format = "heatmap")
+}
+\references{
+Swihart BJ, Punjabi NM, Crainiceanu CM. Modeling sleep fragmentation in sleep hypnograms: An instance of fast, scalable discrete-state, discrete-time analyses. Comput Stat Data Anal. 2015 Sep;89:1-11. doi: 10.1016/j.csda.2015.03.001. PMID: 27182097; PMCID: PMC4865264.
 }

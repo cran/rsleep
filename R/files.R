@@ -195,6 +195,8 @@ read_events_noxturnal <- function(dir){
   # Normalize Cycles
   events <- rbind(events,normalize_cycles(events))
 
+  events$event = as.character(events$event)
+  
   return(events)
 }
 
@@ -341,7 +343,7 @@ read_events_profusion <- function(
     event <- as.character(scored_event["Name"][[1]])
     begin <- startTime + as.numeric(scored_event["Start"][[1]])
     end <- begin + as.numeric(scored_event["Duration"][[1]])
-    row <- list(event, end, begin)
+    row <- data.frame("event" = event, "begin" = begin, "end" = end)
     events <- rbind(events,row)
   }
   

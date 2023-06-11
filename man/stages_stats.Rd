@@ -2,7 +2,7 @@
 % Please edit documentation in R/stats.R
 \name{stages_stats}
 \alias{stages_stats}
-\title{Get stages events related stats in a named vector.}
+\title{Get stages related statistics in a named vector.}
 \usage{
 stages_stats(e)
 }
@@ -13,7 +13,7 @@ stages_stats(e)
 stages vector
 }
 \description{
-\code{stages_stats} computes stages related stats.
+\code{stages_stats} computes stages related statistics.
 }
 \examples{
 e <- data.frame(begin = as.POSIXlt(seq(from = 0, to = 30*10, by = 30),origin = "1970-01-01"))

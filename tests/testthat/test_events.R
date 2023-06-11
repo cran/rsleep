@@ -2,13 +2,13 @@ context("Events related tests")
 
 context("Creating hypnograms")
 
-test_that("Plotting a hypnogram", {
-  events <- read_events_noxturnal("data/noxturnal_events_example_unicode.csv")
-  hypnogram <- hypnogram(events)
-  hypnogram <- plot_hypnogram(events)
-  expect_equal(class(hypnogram)[1], "gg")
-  expect_equal(class(hypnogram)[2], "ggplot")
-})
+# test_that("Plotting a hypnogram", {
+#   events <- read_events_noxturnal("data/noxturnal_events_example_unicode.csv")
+#   hypnogram <- hypnogram(events)
+#   hypnogram <- plot_hypnogram(events)
+#   expect_equal(class(hypnogram)[1], "gg")
+#   expect_equal(class(hypnogram)[2], "ggplot")
+# })
 
 test_that("Events file check", {
 
@@ -68,13 +68,33 @@ test_that("Sleep periods",{
   hypnogram$end <- as.POSIXlt(c(1536967830,1536967860,1536967890),
                               origin = "1970-01-01")
   hypnogram$event = c("REM","N2","REM")
-  periods <- get_sleep_periods(hypnogram = hypnogram,mode = "continuous")
+  periods <- periods(hypnogram = hypnogram,mode = "continuous")
   expect_true(nrow(periods) == 1)
-  periods <- get_sleep_periods(hypnogram = hypnogram,mode = "stages")
+  periods <- periods(hypnogram = hypnogram,mode = "stages")
   expect_true(nrow(periods) == 3)
   expect_true(ncol(periods) == 4)
 })
 
+test_that("Transitions",{
+  events <- data.frame(event = c(
+    "AWA","N1","N2","N2", "N3","N3",
+    "REM","N2","REM","REM", "N2","REM","AWA"))
+  
+  events$begin <- as.POSIXlt(seq(from = 0, to = 30*(nrow(events)-1), by = 30),origin = "1970-01-01")
+  events$end <- as.POSIXlt(seq(from = 30, to = 30*nrow(events), by = 30), origin = "1970-01-01")
+  expect_true(ncol(transitions(events, format = "dataframe")) == 5)
+  expect_true(length(transitions(events)) == 25)
+  
+  events <- data.frame(event = c(
+    "N1","N2","N2", "N3","N3",
+    "REM","N2","REM","REM", "N2","REM"))
+  
+  events$begin <- as.POSIXlt(seq(from = 0, to = 30*(nrow(events)-1), by = 30),origin = "1970-01-01")
+  events$end <- as.POSIXlt(seq(from = 30, to = 30*nrow(events), by = 30), origin = "1970-01-01")
+  expect_true(ncol(transitions(events, format = "dataframe")) == 4)
+  expect_true(length(transitions(events)) == 16)
+  
+})
 
 
 

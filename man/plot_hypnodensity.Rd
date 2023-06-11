@@ -4,12 +4,18 @@
 \alias{plot_hypnodensity}
 \title{Plot a hypnodensity graph.}
 \usage{
-plot_hypnodensity(hypnodensity, stages = c("AWA", "REM", "N1", "N2", "N3"))
+plot_hypnodensity(
+  hypnodensity,
+  stages = c("AWA", "REM", "N1", "N2", "N3"),
+  colors = c("#5BBCD6", "#FF0000", "#00A08A", "#F2AD00", "#F98400")
+)
 }
 \arguments{
 \item{hypnodensity}{A hypnodensity dataframe as returned by the `score_stages_edf` function.}
 
 \item{stages}{Vector of stages labels to plot.}
+
+\item{colors}{Vector of colors to use.}
 }
 \value{
 A `ggplot2` hypnodensity graph.

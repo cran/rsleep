@@ -103,6 +103,8 @@ normalize_cycles <- function(events){
 #' @export
 plot_hypnogram <- function(events, labels = c("N3","N2","N1","REM","AWA")){
   
+  events$event = as.character(events$event)
+  
   stages <- hypnogram(events, labels)
 
   stages$begin <- as.POSIXct(stages$begin)
@@ -207,13 +209,11 @@ hypnogram <- function(
     
     if (nrow(rem) > 0) {
       for (i in c(1:nrow(rem))) {
-        print(i)
         df <- stats::reshape(
           rem[i, ],
           idvar = "event",
           varying = c("begin", "end"), v.names = "value",
           direction = "long")
-        print(df)
         hypnogram <- hypnogram + 
           ggplot2::geom_line(data = df, mapping = ggplot2::aes_string(x = "value", y = "event", 
                                                                       group = 1), colour = "red")}}
@@ -228,6 +228,7 @@ hypnogram <- function(
 #' @references Stephansen, J.B., Olesen, A.N., Olsen, M., Ambati, A., Leary, E.B., Moore, H.E., Carrillo, O., Lin, L., Han, F., Yan, H. and Sun, Y.L., 2018. Neural network analysis of sleep stages enables efficient diagnosis of narcolepsy. Nature communications, 9(1), p.5229.
 #' @param hypnodensity A hypnodensity dataframe as returned by the `score_stages_edf` function.
 #' @param stages Vector of stages labels to plot.
+#' @param colors Vector of colors to use.
 #' @return A `ggplot2` hypnodensity graph.
 #' @examples
 #' download.file("https://rsleep.org/data/hypnodensity.csv", "hypnodensity.csv")
@@ -239,9 +240,10 @@ hypnogram <- function(
 #' plot_hypnodensity(hypnodensity)
 #' @export
 plot_hypnodensity <- function(hypnodensity,
-                              stages = c("AWA","REM","N1","N2","N3")){
+                              stages = c("AWA","REM","N1","N2","N3"),
+                              colors = c("#5BBCD6", "#FF0000", "#00A08A", "#F2AD00", "#F98400")){
 
-  pal <- c("#5BBCD6", "#FF0000", "#00A08A", "#F2AD00", "#F98400")
+  pal <- colors
 
   if(length(stages) == 3){
     pal <- c("#5BBCD6","#F2AD00","#FF0000")
@@ -383,14 +385,14 @@ smooth_liang2012 <- function(hypnogram){
 #' 
 #' events <- hypnogram(hypnodensity)
 #' 
-#' periods_continuous <- get_sleep_periods(events, mode = "continuous")
+#' periods_continuous <- periods(events, mode = "continuous")
 #' 
 #' ggplot(periods_continuous, aes(x=duration)) + geom_histogram(bins = 30)
 #' 
-#' periods_stages <- get_sleep_periods(events, mode = "stages")
+#' periods_stages <- periods(events, mode = "stages")
 #'  
 #' ggplot(periods_stages, aes(x=event,y=duration,color=event)) + geom_boxplot()
-get_sleep_periods <- function(
+periods <- function(
     hypnogram,
     mode = "continuous",
     stages = c("N1", "N2", "N3", "N4", "REM")){
@@ -423,12 +425,13 @@ get_sleep_periods <- function(
   return(periods)
 }
 
-#' Compute a matrix of stages transitions counts.
+#' Count and format stages transitions.
 #'
+#' @references Swihart BJ, Punjabi NM, Crainiceanu CM. Modeling sleep fragmentation in sleep hypnograms: An instance of fast, scalable discrete-state, discrete-time analyses. Comput Stat Data Anal. 2015 Sep;89:1-11. doi: 10.1016/j.csda.2015.03.001. PMID: 27182097; PMCID: PMC4865264.
 #' @param hypnogram A hypnogram dataframe. Dataframe must contain \code{begin} (\code{POSIXt}), \code{end} (\code{POSIXt}) and \code{event} (\code{character}) columns.
 #' @param stages Stages to include in transitions Defaults to \code{c("N1", "N2", "N3", "N4", "REM")}.
-#' @param plot Plot the transition matrix or not. Takes \code{"heatmap"} to plot a heatmap of transitions or \code{FALSE} to return the matrix as a dataframe without plotting it.
-#' @return A matrix with count of stages transitions, or a plot.
+#' @param format Set the return format. 'vector', 'dataframe' or 'heatmap'.
+#' @return Count of stages transitions in selected format.
 #' @export
 #' @examples
 #' download.file("https://rsleep.org/data/hypnodensity.csv", "hypnodensity.csv")
@@ -439,11 +442,29 @@ get_sleep_periods <- function(
 #' 
 #' events <- hypnogram(hypnodensity)
 #' 
-#' transitions(events, plot = "heatmap")
+#' transitions(events)
+#' 
+#' transitions(events, format = "dataframe")
+#' 
+#' transitions(events, format = "heatmap")
+#' 
+#' events <- data.frame(event = c(
+#'   "AWA","N1","N2","N2", "N3","N3",
+#'   "REM","N2","REM","REM", "N2","REM","AWA"))
+#' 
+#' events$begin <- as.POSIXlt(seq(from = 0, to = 30*(nrow(events)-1), by = 30),origin = "1970-01-01")
+#' 
+#' events$end <- as.POSIXlt(seq(from = 30, to = 30*nrow(events), by = 30), origin = "1970-01-01")
+#' 
+#' transitions(events)
+#' 
+#' transitions(events, format = "dataframe")
+#' 
+#' transitions(events, format = "heatmap")
 transitions <- function(
     hypnogram,
     stages = c("AWA", "REM", "N1", "N2", "N3"),
-    plot = FALSE){
+    format = "vector"){
   
   hypnogram$event <- as.character(hypnogram$event)
   
@@ -465,11 +486,15 @@ transitions <- function(
     }
   }
   
-  if(plot == FALSE){
+  if(format == "vector"){
+    
+    return(named_matrix2named_vector(transitions))
+    
+  } else if(format == "dataframe"){
     
     return(transitions)
     
-  } else if(plot=="heatmap"){
+  } else if(format == "heatmap"){
     
     transitions$from <- row.names(transitions)
     transitions <- reshape2::melt(transitions, value.name = "from", id="from")
@@ -487,9 +512,134 @@ transitions <- function(
     
   } else {
     
-    stop("'plot' parameter must be FALSE, or 'heatmap'.")
+    stop("'format' parameter must be 'vector', 'matrix' or 'heatmap'.")
     
   }
 }
 
+#' Read events from a Resmed Noxturnal .ndb file.
+#'
+#' @param data_file .ndb file path.
+#' @return An events dataframe.
+#' @export
+read_events_ndb <- function(data_file){
+  
+  # TODO clean this function
+  
+  data_ndb <- paste0(data_file)
+  
+  nox_db <- DBI::dbConnect(RSQLite::SQLite(), data_ndb)
+  
+  tables <- RSQLite::dbListTables(nox_db)
+  
+  res <- list()
+  
+  res$tables <- list()
+  
+  for(table in tables){
+    res$tables[[table]] <- RSQLite::dbGetQuery(
+      conn = nox_db,
+      paste0('SELECT * FROM ', table))
+  }
+  
+  # Start time
+  timestamp <- as.numeric(
+    res$tables$internal_property$value[
+      res$tables$internal_property$key == "RecordingStart"])
+  epoch0.Csharp <- 621355968000000000
+  timestamp.conv <- (timestamp - epoch0.Csharp) / 1e7
+  startTime <- as.POSIXct(timestamp.conv, origin="1970-01-01")
+  
+  events <- data.frame(
+    "begin" = startTime,
+    "end" = startTime,
+    "event" = "RecordingStart",
+    stringsAsFactors = FALSE)
+  
+  # Stop time
+  timestamp <- as.numeric(
+    res$tables$internal_property$value[
+      res$tables$internal_property$key == "RecordingStop"])
+  timestamp.conv <- (timestamp - epoch0.Csharp) / 1e7
+  stopTime <- as.POSIXct(timestamp.conv, origin="1970-01-01")
+  
+  events <- rbind(events, data.frame(
+    "begin" = stopTime,
+    "end" = stopTime,
+    "event" = "RecordingStop",
+    stringsAsFactors = FALSE))
+  
+  events$location <- NA
+  
+  # Stages
+  # stages <- res$tables$scoring_marker
+  # stages <- stages[,c("starts_at", "ends_at", "type")]
+  # colnames(stages) <- c("begin", "end", "event")
+  # stages$begin <- as.POSIXct(((stages$begin - epoch0.Csharp) / 1e7), origin="1970-01-01")
+  # stages$end <- as.POSIXct(((stages$end - epoch0.Csharp) / 1e7), origin="1970-01-01")
+  # stages$location <- NA
+  
+  if("temporary_scoring_marker" %in% tables){
+    scored_events <- res$tables$temporary_scoring_marker
+  } else {
+    scored_events <- res$tables$scoring_marker
+  }
+  
+  scored_events <- scored_events[,c("starts_at","ends_at", "type", "location")]
+  colnames(scored_events) <- c("begin", "end", "event", "location")
+  scored_events$begin <- as.POSIXct(((scored_events$begin - epoch0.Csharp) / 1e7), origin="1970-01-01")
+  scored_events$end <- as.POSIXct(((scored_events$end - epoch0.Csharp) / 1e7), origin="1970-01-01")
+  scored_events$location[scored_events$location == ""] <- NA
+  
+  scored_events$event[scored_events$event == "sleep-wake"] <- "AWA"
+  scored_events$event[scored_events$event == "sleep-n1"] <- "N1"
+  scored_events$event[scored_events$event == "sleep-n2"] <- "N2"
+  scored_events$event[scored_events$event == "sleep-n3"] <- "N3"
+  scored_events$event[scored_events$event == "sleep-rem"] <- "REM"
+  scored_events$event[scored_events$event == "arousal"] <- "Arousal"
+  
+  events <- rbind(events, scored_events)
+  
+  return(scored_events)
+}
 
+#' Highlight a scored event over a signal.
+#'
+#' @param signal The signal vector.
+#' @param sRate Sample rate of the signal.
+#' @param sig_start Date-Time value of the signal start.
+#' @param event_start Date-Time value of the event start.
+#' @param event_end Date-Time value of the event end.
+#' @param window Number of seconds of signal to plot before, and after.
+#' @return A plot of the highlighted event over the signal.
+#' @export
+plot_event <- function(
+    signal,
+    sRate,
+    sig_start,
+    event_start,
+    event_end,
+    window = 10){
+  idx_signal_start <- floor(as.numeric(difftime(event_start,sig_start, units = "sec"))*sRate-window*sRate)
+  idx_signal_end <- floor(as.numeric(difftime(event_end,sig_start, units = "sec"))*sRate+window*sRate)
+  df <- data.frame(
+    "y" = signal[idx_signal_start:idx_signal_end],
+    "x" = seq(event_start-window,event_end+window, length.out =length(signal[idx_signal_start:idx_signal_end])))
+  ggplot2::ggplot(
+    data = df)+ggplot2::aes_string(x="x",y="y")+ ggplot2::geom_line() +
+    ggplot2::geom_rect(ggplot2::aes(xmin=event_start,
+                                    xmax = event_end,
+                                    ymin = -Inf,
+                                    ymax = Inf), fill = 'pink', alpha = 0.02) +
+    ggplot2::xlab("Time")+ ggplot2::ylab("Signal values")}
+
+
+named_matrix2named_vector <- function(m){
+  r = c()
+  for(i in c(1:length(names(m)))){
+    for(j in c(1:length(row.names(m)))){
+      r[paste0(names(m)[i],"_",row.names(m)[j])] = m[i,j]
+    }
+  }
+  return(r)
+}

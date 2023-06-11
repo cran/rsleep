@@ -1,58 +1,70 @@
 ## ----env, include = FALSE-----------------------------------------------------
+options(scipen=999)
+
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
-)
+  comment = "#>")
 
 ## ----edf_read, echo=FALSE-----------------------------------------------------
 library(edfReader)
 
-if(!file.exists("learn-nsrr01.edf")){
+fname <- "15012016HD.edf"
+if(!file.exists(fname)){
   download.file(
-  url = "https://sleepdata.org/datasets/learn/files/m/browser/polysomnography/edfs/learn-nsrr01.edf",
-  destfile = "learn-nsrr01.edf")}
+  url = "https://rsleep.org/data/15012016HD.edf",
+  destfile = fname,
+  method = "curl")}
 
-h <- readEdfHeader("learn-nsrr01.edf")
+h <- readEdfHeader(fname)
 
-s <- readEdfSignals(h)
+s <- readEdfSignals(h, signals = "C3-M2")
 
 ## ----spectrogram, echo=FALSE, fig.width=7-------------------------------------
 library(rsleep)
 
 spectrogram(
-  signal = s$EEG$signal,
-  sRate = s$EEG$sRate,
-  startTime = s$ECG$startTime)
+  signal = s$signal,
+  sRate = s$sRate,
+  startTime = s$startTime)
 
 ## ----hypnogram, echo=FALSE, fig.width = 7-------------------------------------
-if(!file.exists("learn-nsrr01-profusion.xml")){
+if(!file.exists("15012016HD.csv")){
   download.file(
-  url = "https://sleepdata.org/datasets/learn/files/m/browser/polysomnography/annotations-events-profusion/learn-nsrr01-profusion.xml",
-  destfile = "learn-nsrr01-profusion.xml")}
+  url = "https://rsleep.org/data/15012016HD.csv",
+  destfile = "15012016HD.csv",
+  method="curl")}
 
-events <- read_events_profusion(
-  "learn-nsrr01-profusion.xml", h$startTime)
+events <- read_events_noxturnal("15012016HD.csv")
+
+# Remove last epoch as signal stops before.
+events <- head(events, -1)
+
+# Remove other events
+events <- events[events$event %in% c("AWA", "REM", "N1", "N2", "N3"),]
 
 plot_hypnogram(events)
 
 ## ----epoching-----------------------------------------------------------------
 epochs <- epochs(
-  signals = s$EEG$signal,
-  sRates = s$EEG$sRate,
-  epoch = rsleep::hypnogram(events),
+  signals = s$signal,
+  sRates = s$sRate,
+  epoch = events,
   startTime = as.numeric(as.POSIXct(h$startTime)))
 
 ## ----pwelch, fig.width=7, message=FALSE, error=FALSE--------------------------
-p <- pwelch(epochs[[100]], sRate = s$EEG$sRate)
+p <- pwelch(epochs[[120]], sRate = s$sRate)
 
 summary(p)
 
 ## ----avg_pdg_compute----------------------------------------------------------
-periodograms <- mapply(x = epochs, y = rsleep::hypnogram(events)$event, FUN = function(x,y){
-  p <- pwelch(x, sRate = s$EEG$sRate, show = FALSE)
-  p <- as.data.frame(p[p$hz <= 30,])
-  p$stage <- y
-  p
+periodograms <- mapply(
+  x = epochs, 
+  y = events$event,
+  FUN = function(x,y){
+    p <- pwelch(x, sRate = s$sRate, show = FALSE)
+    p <- as.data.frame(p[p$hz <= 30,])
+    p$stage <- y
+    p
 }, SIMPLIFY = F)
 
 ## ----pdg_rbind----------------------------------------------------------------
@@ -64,7 +76,7 @@ avg_periodograms <- aggregate(psd ~ hz+stage, periodograms_df, mean)
 ## ----periodogram_plot, fig.width=7, message=FALSE, error=FALSE----------------
 library(ggplot2)
 
-palette <- c("#F98400","#F2AD00","#00A08A","#FF0000","#5BBCD6")
+palette <- c("#5BBCD6","#00A08A","#F2AD00","#F98400","#FF0000")
 
 ggplot(avg_periodograms, aes(x=hz,y=psd,color=stage)) +
   geom_line() + theme_bw() +
@@ -80,8 +92,7 @@ bands <- lapply(epochs,function(x){
                    c(3.5,7.5), # Theta
                    c(7.5,13), # Alpha
                    c(13,30)), # Beta
-      signal = x, sRate = s$EEG$sRate,
-      normalize = c(0.5,30))
+      signal = x, sRate = s$sRate)
 })
 
 ## ----bands_reshape------------------------------------------------------------

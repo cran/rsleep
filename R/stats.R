@@ -1,6 +1,6 @@
-#' Get stages events related stats in a named vector.
+#' Get stages related statistics in a named vector.
 #'
-#' \code{stages_stats} computes stages related stats.
+#' \code{stages_stats} computes stages related statistics.
 #'
 #' @param e Events dataframe. Dataframe must have \code{begin} (\code{POSIXt}), \code{end} (\code{POSIXt}) and \code{event} (\code{character}) columns.
 #' @return stages vector
@@ -25,7 +25,7 @@ stages_stats <- function(e){
   # Time To Sleep (TTS)
   r = c(r, "tts" = sum(as.numeric(difftime(e$end[e$event %in% c("N1", "N2", "N3", "REM")],e$begin[e$event  %in% c("N1", "N2", "N3", "REM")],units="min"))))
 
-  # Time To Sleep (TTS)
+  # Time To Sleep (TTS) by stage
   r = c(r, "rem_tts" = ifelse(r[["tts"]] == 0, 0, r[["rem_duration"]]/r[["tts"]]))
   r = c(r, "n1_tts" = ifelse(r[["tts"]] == 0, 0, r[["n1_duration"]]/r[["tts"]]))
   r = c(r, "n2_tts" = ifelse(r[["tts"]] == 0, 0, r[["n2_duration"]]/r[["tts"]]))
@@ -75,7 +75,7 @@ tst90 <- function(
     sRate,
     startTime,
     hypnogram){
-  periods <- rsleep::get_sleep_periods(hypnogram)
+  periods <- rsleep::periods(hypnogram)
   u90 <- 0
   for(i in c(1:nrow(periods))){
     x <- as.numeric(difftime(periods[i,]$begin, startTime, units="secs"))
@@ -84,4 +84,36 @@ tst90 <- function(
     u90 <- u90 + (length(signal[signal<90])/sRate)
   }
   return(u90/sum(periods$duration))
+}
+
+#' Computes Cohen's Kappa for agreement in the case of 2 raters.
+#' @description Cohen’s kappa coefficient value is a robust statistical measure of inter-rater agreement published in 1960 by Jacob Cohen. It has been reused by numerous studies in sleep medicine to measure the accuracy of predictions, especially for automatic sleep staging. 
+#' @param observed The vector of observed values (truth).
+#' @param predicted The vector of predicted values.
+#' @references Cohen J. A Coefficient of Agreement for Nominal Scales. Educational and Psychological Measurement. 1960;20:37-46. 
+#' @examples 
+#' observed = c("AWA", "N1", "N2", "N3", "REM")
+#' predicted = c("AWA", "AWA", "N2", "N3", "REM")
+#' ckappa(observed, predicted)
+#' @export
+ckappa <- function(observed, predicted){
+
+  # calculate the number of observations
+  n <- length(observed)
+  
+  # calculate the number of agreements
+  agreements <- sum(observed == predicted)
+  
+  # calculate the expected number of agreements
+  tab <- table(observed, predicted)
+  p_o <- prop.table(tab,1)
+  p_p <- prop.table(tab,2)
+  p_e <- p_o %*% t(p_p)
+  p_e <- p_e*n
+  
+  # calculate Cohen's Kappa
+  #kappa <- (agreements - sum(p_e)) / (n - sum(p_e))
+  kappa <- sum(agreements - p_e) / sum(n - p_e)
+  
+  kappa
 }

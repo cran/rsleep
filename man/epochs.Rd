@@ -2,7 +2,7 @@
 % Please edit documentation in R/epochs.R
 \name{epochs}
 \alias{epochs}
-\title{Split signals into  epochs according to an events dataframe or an epoch duration.}
+\title{Split signals into consecutive, non-overlaping epochs according to an events dataframe or an epoch duration.}
 \usage{
 epochs(
   signals,
