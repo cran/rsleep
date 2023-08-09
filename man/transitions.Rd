@@ -6,7 +6,7 @@
 \usage{
 transitions(
   hypnogram,
-  stages = c("AWA", "REM", "N1", "N2", "N3"),
+  stages = c("AWA", "REM", "N1", "N2", "N3", "NREM"),
   format = "vector"
 )
 }
@@ -38,19 +38,17 @@ transitions(events, format = "dataframe")
 
 transitions(events, format = "heatmap")
 
-events <- data.frame(event = c(
-  "AWA","N1","N2","N2", "N3","N3",
-  "REM","N2","REM","REM", "N2","REM","AWA"))
+# 3 Dimensions sleep transitions
+levels(events$event)[levels(events$event)=="N1"] <- "NREM"
+levels(events$event)[levels(events$event)=="N2"] <- "NREM"
+levels(events$event)[levels(events$event)=="N3"] <- "NREM"
 
-events$begin <- as.POSIXlt(seq(from = 0, to = 30*(nrow(events)-1), by = 30),origin = "1970-01-01")
-
-events$end <- as.POSIXlt(seq(from = 30, to = 30*nrow(events), by = 30), origin = "1970-01-01")
-
-transitions(events)
-
-transitions(events, format = "dataframe")
-
-transitions(events, format = "heatmap")
+round(
+  transitions(
+    events, 
+    format = "dataframe")/(
+      sum(transitions(events)))*100,2)
+      
 }
 \references{
 Swihart BJ, Punjabi NM, Crainiceanu CM. Modeling sleep fragmentation in sleep hypnograms: An instance of fast, scalable discrete-state, discrete-time analyses. Comput Stat Data Anal. 2015 Sep;89:1-11. doi: 10.1016/j.csda.2015.03.001. PMID: 27182097; PMCID: PMC4865264.

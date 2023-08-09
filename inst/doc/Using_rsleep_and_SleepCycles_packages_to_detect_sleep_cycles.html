@@ -12,7 +12,7 @@
 
 
 
-<title>Using Rsleep and SleepCycles Packages To Detect Sleep Cycles</title>
+<title>Using Rsleep and SleepCycles Packages to Detect Sleep Cycles</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -358,7 +358,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Using Rsleep and SleepCycles Packages To
+<h1 class="title toc-ignore">Using Rsleep and SleepCycles Packages to
 Detect Sleep Cycles</h1>
 
 
@@ -380,9 +380,9 @@ from data that has been categorized based on AASM criteria for sleep
 staging <span class="citation">[3]</span>.</p>
 <p>In the other hand, the <a href="https://rsleep.org/">rsleep</a>
 package reads and analyze sleep data in various formats.</p>
-<p>This vignettte describes how to combine <code>SleepCycles</code> and
+<p>This vignette describes how to combine <code>SleepCycles</code> and
 <code>rsleep</code> packages to identify sleep cycles in sleep data and
-leverage this material in sleep data analysis pipelines.</p>
+then leverage this material in sleep data analysis pipelines.</p>
 <div id="hypnogram" class="section level2">
 <h2>Hypnogram</h2>
 <p>Sleep cycles can be identified from hypnograms. <a href="https://rsleep.org/data/15012016HD.csv"><code>15012016HD.csv</code></a>
@@ -411,28 +411,30 @@ format.</p>
 <p>Tne <code>SleepCycles</code> package only reads directories and files
 in specific format. Hypnograms must be converted in the appropriate
 arrangement before being written on disk in an explicit folder:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>events.vmrk <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Description =</span> <span class="fu">as.character</span>(events<span class="sc">$</span>event))</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;AWA&quot;</span>] <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N1&quot;</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N2&quot;</span>] <span class="ot">=</span> <span class="dv">2</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N3&quot;</span>] <span class="ot">=</span> <span class="dv">3</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;REM&quot;</span>] <span class="ot">=</span> <span class="dv">5</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description <span class="ot">=</span> <span class="fu">as.integer</span>(events.vmrk<span class="sc">$</span>Description)</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Type <span class="ot">=</span> <span class="st">&quot;SleepStage&quot;</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>events.vmrk <span class="ot">=</span> events.vmrk[,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>)]</span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>newdir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(),<span class="st">&quot;SleepCycles&quot;</span>)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>events.vmrk <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Description =</span> <span class="fu">as.character</span>(events<span class="sc">$</span>event))</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;AWA&quot;</span>] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N1&quot;</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N2&quot;</span>] <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;N3&quot;</span>] <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description[events.vmrk<span class="sc">$</span>Description <span class="sc">==</span> <span class="st">&quot;REM&quot;</span>] <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Description <span class="ot">=</span> <span class="fu">as.integer</span>(events.vmrk<span class="sc">$</span>Description)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>events.vmrk<span class="sc">$</span>Type <span class="ot">=</span> <span class="st">&quot;SleepStage&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>events.vmrk <span class="ot">=</span> events.vmrk[,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>)]</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>newdir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="fu">tempdir</span>(),<span class="st">&quot;SleepCycles&quot;</span>)</span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="fu">dir.create</span>(newdir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a></span>
 <span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="fu">write.table</span>(</span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>  events.vmrk, </span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">paste</span>(newdir, <span class="st">&quot;events.txt&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;/&quot;</span>),</span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">FALSE</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">paste</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>    newdir,</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>    <span class="st">&quot;events.txt&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;/&quot;</span>),</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">FALSE</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>  <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>)</span></code></pre></div>
 </div>
 <div id="detection" class="section level2">
 <h2>Detection</h2>
@@ -445,25 +447,15 @@ take the format as parameters and return directly the results as a
 dataframe, making the pipeline easier to automate.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;boupetch/SleepCycles&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; Skipping install of &#39;SleepCycles&#39; from a github remote, the SHA1 (4fd13643) has not changed since last install.</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;   Use `force = TRUE` to force installation</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>cycles <span class="ot">=</span> SleepCycles<span class="sc">::</span><span class="fu">SleepCycles</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="at">p =</span> newdir, </span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="at">filetype =</span> <span class="st">&quot;txt&quot;</span>, </span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">unlink</span>(newdir, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">head</span>(cycles)</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;         Type SleepCycle SleepStages N_REM percentile</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 1 SleepStage         NA           0    NA         NA</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 2 SleepStage         NA           0    NA         NA</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 3 SleepStage         NA           0    NA         NA</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 4 SleepStage         NA           0    NA         NA</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 5 SleepStage         NA           0    NA         NA</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 6 SleepStage         NA           0    NA         NA</span></span></code></pre></div>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>cycles <span class="ot">=</span> SleepCycles<span class="sc">::</span><span class="fu">SleepCycles</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">p =</span> newdir, </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">filetype =</span> <span class="st">&quot;txt&quot;</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">unlink</span>(newdir, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">head</span>(cycles)</span></code></pre></div>
 </div>
 <div id="indicators" class="section level2">
 <h2>Indicators</h2>
@@ -475,51 +467,26 @@ macrostructure indicators:</p>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Number of cycles</span></span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">max</span>(hypnogram.full<span class="sc">$</span>SleepCycle, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; [1] 7</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  </span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co"># Duration of each cycle</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>hypnogram.agg <span class="ot">=</span> <span class="fu">aggregate</span>(</span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  event <span class="sc">~</span> SleepCycle, </span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">data =</span> hypnogram.full, </span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="at">FUN =</span> length)</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>hypnogram.agg<span class="sc">$</span>minutes <span class="ot">=</span> hypnogram.agg<span class="sc">$</span>event<span class="sc">/</span><span class="dv">2</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>hypnogram.agg</span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;   SleepCycle event minutes</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 1          1   301   150.5</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 2          2   186    93.0</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; 3          3   152    76.0</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; 4          4   202   101.0</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; 5          5   175    87.5</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; 6          6   161    80.5</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; 7          7   172    86.0</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co"># Composition of each cycle</span></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>cycles.comp <span class="ot">=</span> <span class="fu">aggregate</span>(</span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>  SleepStages <span class="sc">~</span> SleepCycle <span class="sc">+</span> event, </span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>  <span class="at">data =</span> hypnogram.full, </span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>  <span class="at">FUN =</span> length)</span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>cycles.comp <span class="ot">=</span> <span class="fu">reshape</span>(</span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>  <span class="at">data =</span> cycles.comp, </span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;wide&quot;</span>, </span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>  <span class="at">timevar  =</span> <span class="st">&quot;event&quot;</span>,</span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>  <span class="at">idvar  =</span> <span class="st">&quot;SleepCycle&quot;</span>)</span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>cycles.comp</span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt;    SleepCycle SleepStages.N3 SleepStages.N2 SleepStages.N1 SleepStages.REM</span></span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; 1           1             98             60              9              71</span></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; 2           2            108             56             NA              21</span></span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; 3           4              6            114             NA              81</span></span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; 4           5              5             73             NA              96</span></span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; 5           6             39             62             NA              54</span></span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; 8           3             NA             91             NA              60</span></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; 12          7             NA             77             NA              93</span></span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt;    SleepStages.AWA</span></span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt; 1               63</span></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt; 2                1</span></span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt; 3                1</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt; 4                1</span></span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="co">#&gt; 5                6</span></span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="co">#&gt; 8                1</span></span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="co">#&gt; 12               2</span></span></code></pre></div>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  </span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co"># Duration of each cycle</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>hypnogram.agg <span class="ot">=</span> <span class="fu">aggregate</span>(</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  event <span class="sc">~</span> SleepCycle, </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="at">data =</span> hypnogram.full, </span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">FUN =</span> length)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>hypnogram.agg<span class="sc">$</span>minutes <span class="ot">=</span> hypnogram.agg<span class="sc">$</span>event<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>hypnogram.agg</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co"># Composition of each cycle</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>cycles.comp <span class="ot">=</span> <span class="fu">aggregate</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  SleepStages <span class="sc">~</span> SleepCycle <span class="sc">+</span> event, </span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>  <span class="at">data =</span> hypnogram.full, </span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>  <span class="at">FUN =</span> length)</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>cycles.comp <span class="ot">=</span> <span class="fu">reshape</span>(</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>  <span class="at">data =</span> cycles.comp, </span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;wide&quot;</span>, </span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>  <span class="at">timevar  =</span> <span class="st">&quot;event&quot;</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>  <span class="at">idvar  =</span> <span class="st">&quot;SleepCycle&quot;</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>cycles.comp</span></code></pre></div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>

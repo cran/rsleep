@@ -34,15 +34,14 @@ library(rsleep)
 
 ## Vignettes
 
-- [Spectral analysis of sleep electroencephalography
-  signals](https://rsleep.org/articles/Spectral_analysis_sleep_electroencephalography.html)
+- [Spectral analysis of sleep electroencephalography signals](https://rsleep.org/articles/Spectral_analysis_sleep_electroencephalography.html)
+- [Using Rsleep and SleepCycles Packages to Detect Sleep Cycles](https://rsleep.org/articles/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.html)
   
 ## Examples
 
 ### Plotting a spectrogram
 
 [<img src="https://rsleep.org/articles/Spectral_analysis_sleep_electroencephalography_files/figure-html/spectrogram-1.png" width="600">](https://rsleep.org/articles/Spectral_analysis_sleep_electroencephalography.html)
-
 
 ### Detecting R peaks in ECG signal
 
@@ -77,6 +76,8 @@ library(rsleep)
 
 ## rsleep usage in scientific litterature
 
+- Wolf, M.C., Klein, P., Kulau, U., Richter, C. and Wolf, K.H., [DR. BEAT: First Insights into a Study to Collect Baseline BCG Data with a Sensor-Based Wearable Prototype in Heart-Healthy Adults.](https://arinex.com.au/EMBC/pdf/full-paper_271.pdf)
+
 - P. Bouchequet, T. Andrillon, G. Solelhac, A. Rouen, F. Sauvet, and D. Léger, [0424 Visualizing insomnia phenotypes using dimensionality reduction techniques,](https://academic.oup.com/sleep/article/46/Supplement_1/A188/7181658) SLEEP, vol. 46, no. Supplement_1. Oxford University Press (OUP), pp. A188–A189, May 01, 2023. doi: 10.1093/sleep/zsad077.0424.
 
 - Altınkaya Z, Öztürk L, Büyükgüdük İ, et al. [Non-invasive vagus nerve stimulation in a hungry state decreases heart rate variability.](https://www.sciencedirect.com/science/article/abs/pii/S0031938422003213) Physiology & Behavior. 2023;258:114016.
@@ -94,5 +95,3 @@ library(rsleep)
 - Arts F. [Predicting Subjective Team Performance Using Multimodal, Single-Modality and Segmented Physiological Data](https://arno.uvt.nl/show.cgi?fid=156733) Thesis, 2020.
 
 - Andrillon T, Solelhac G, Bouchequet P, et al. [Revisiting the value of polysomnographic data in insomnia: more than meets the eye.](https://www.sciencedirect.com/science/article/abs/pii/S1389945719316442) Sleep Medicine. 2020;66:184-200.
-
-
