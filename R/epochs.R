@@ -85,16 +85,20 @@ epochs <- function(signals,
       
       for(j in c(1:padding)){
         
-        if((i-1) %in% c(1:length(epochs))){
-          prev <- epochs[[i-1]]
+        if((i-j) %in% c(1:length(epochs))){
+          prev <- epochs[[i-j]]
         } else {
-          prev <- epochs[[1]]
+          m = matrix(nrow = nrow(epochs[[i]]), ncol = ncol(epochs[[i]]))
+          m[is.na(m)] <- 0
+          prev <- m
         }
         
-        if((i+1) %in%  c(1:length(epochs))){
-          last <- epochs[[i+1]]
+        if((i+j) %in%  c(1:length(epochs))){
+          last <- epochs[[i+j]]
         } else {
-          last <- epochs[[length(epochs)]]
+          m = matrix(nrow = nrow(epochs[[i]]), ncol = ncol(epochs[[i]]))
+          m[is.na(m)] <- 0
+          last <- m
         }
         
         epoch <-  abind::abind(prev, epoch, last, along = 1)
@@ -131,13 +135,14 @@ epochs <- function(signals,
 #' plot(computed_segments[1,,1], type = "l")
 #' plot(computed_segments[2,,1], type = "l")
 #' @export
-segmentation <- function(signals,
-                     sRates,
-                     segments_size = 10,
-                     step = 1,
-                     padding = 0,
-                     resample = max(sRates),
-                     return_index = FALSE) {
+segmentation <- function(
+    signals,
+    sRates,
+    segments_size = 10,
+    step = 1,
+    padding = 0,
+    resample = max(sRates),
+    return_index = FALSE) {
   
   resampled_signals = mapply(function(x, y) {
     if (y != resample) {

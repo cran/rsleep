@@ -1,11 +1,11 @@
-0daa1a269119bb385f0b25b4ab4e38da *DESCRIPTION
+d0a1f6d8ed5997942169ce06d143476c *DESCRIPTION
 28eeb21923623a0b5fb46f4089f548ed *LICENSE
 9e621fc29f6d2b7eb4743f39522c78c3 *NAMESPACE
-64af24196018e267d8a02f361d28c19e *NEWS.md
+78a7a14e51b1556c53be1fe0a907c435 *NEWS.md
 1a9155f37dcdfd0f9a6aff25ed6677af *R/ecg.R
 8795cd5ea409d0aa0e110d6aeacf4a34 *R/eeg.R
-8a23489c67b13c8c7af2b7885a9ee6b2 *R/epochs.R
-7556704a983c5a5df9e4776666e47f8f *R/events.R
+fcc0f9617af3ed2aa1b7f08c1204b820 *R/epochs.R
+e2c37f2d6a560f1b6a3ecabdd1f68b01 *R/events.R
 fa2cb54985b13d74206a17c3d42df99d *R/files.R
 d12c532db15b3006cf1eedd70c14b65a *R/models.R
 10fbb188f60cab3b7e930ca457c0ad71 *R/scoring.R
@@ -16,8 +16,8 @@ ab48ec4dd1d49dc2eef195b6ab75d3f4 *R/stats.R
 fc60a912f4aa31f66751bac478ea5965 *inst/doc/Spectral_analysis_sleep_electroencephalography.Rmd
 6394a3df28184c98f90be0c8b5883bc8 *inst/doc/Spectral_analysis_sleep_electroencephalography.html
 4ca03b75f2762fedd49036f00d6cfa34 *inst/doc/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.R
-53265647a84f9e95cad6db3a144a5715 *inst/doc/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.Rmd
-ddb054e6a9f6c10c42a3db799ae54cb5 *inst/doc/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.html
+45adeab27b74c57eb8722319dd98bd60 *inst/doc/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.Rmd
+8d103664ad4b913a1984405369d06333 *inst/doc/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.html
 71a292622fd750d0aa77a09160607b5e *man/bands_psd.Rd
 bd17e80dfbd37f9c3fd6d33e4cddec49 *man/chambon2018.Rd
 786cf41b9e42b88a53f032435b4cf865 *man/check_events.Rd
@@ -30,7 +30,7 @@ f3642892adf02ef77157ac8f79e0b981 *man/ckappa.Rd
 c11427cbaaaa15563e38ffb0442f331f *man/periods.Rd
 d92509ebf4de5541cef308a7153cfb8c *man/plot_event.Rd
 8e59ae14e749a2aa3e8779a4253a2f28 *man/plot_hypnodensity.Rd
-4c5c58bd3354043cb104b4380cf26a59 *man/plot_hypnogram.Rd
+f1e62afc83c7928191a4047a71b211e7 *man/plot_hypnogram.Rd
 91da9fe5549d0c26c1d6382bbf6c28e3 *man/psm.Rd
 3894e4a42a5b60b66e46d198d4238abe *man/pwelch.Rd
 775e1d92ce2a796aa73a62c9b34cd2fc *man/read_events_compumedics.Rd
@@ -68,6 +68,6 @@ c7af8e4be5178df6f4ddaf92305e6411 *tests/testthat/test_files.R
 75d08b05c53e3d509999929766d5a52a *tests/testthat/test_stats.R
 fc60a912f4aa31f66751bac478ea5965 *vignettes/Spectral_analysis_sleep_electroencephalography.Rmd
 333bf7c7469bfefc0c89fb736ce7ca55 *vignettes/Spectral_analysis_sleep_electroencephalography.bibtex
-53265647a84f9e95cad6db3a144a5715 *vignettes/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.Rmd
+45adeab27b74c57eb8722319dd98bd60 *vignettes/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.Rmd
 a810837ecaa5b8ae6c52be2eafae4f88 *vignettes/Using_rsleep_and_SleepCycles_packages_to_detect_sleep_cycles.bibtex
 f53c89c6e2bea5748c125151f30b1f80 *vignettes/vignettes.csl

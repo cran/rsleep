@@ -25,11 +25,4 @@ origin = "1970-01-01")
 hypnogram$event = c("N3","N3","REM")
 plot_hypnogram(hypnogram)
 
-fpath <- paste0(tempdir(),"SC4001EC-Hypnogram.edf")
-furl <- paste0("https://www.physionet.org/files/sleep-edfx/1.0.0/",
-"sleep-cassette/SC4001EC-Hypnogram.edf?download")
-download.file(furl,fpath)
-hypnogram <- read_events_sleepedfx(fpath)
-unlink(fpath)
-plot_hypnogram(hypnogram)
 }
