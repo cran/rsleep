@@ -12,7 +12,7 @@
 
 
 
-<title>Spectral Analysis of Sleep EEG Signals</title>
+<title>Spectral analysis of sleep EEG signals</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -358,7 +358,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Spectral Analysis of Sleep EEG Signals</h1>
+<h1 class="title toc-ignore">Spectral analysis of sleep EEG signals</h1>
 
 
 <div id="TOC">
@@ -424,15 +424,13 @@ version from Github.</p>
 <p><code>rsleep</code> reads this particular format with the
 <code>read_events_noxturnal</code> function. The
 <code>plot_hypnogram</code> function then plots the hypnogram.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;15012016HD.csv&quot;</span>)){</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">download.file</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">&quot;https://rsleep.org/data/15012016HD.csv&quot;</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">&quot;15012016HD.csv&quot;</span>)}</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>events <span class="ot">&lt;-</span> rsleep<span class="sc">::</span><span class="fu">read_events_noxturnal</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="st">&quot;15012016HD.csv&quot;</span>, h<span class="sc">$</span>startTime)</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>rsleep<span class="sc">::</span><span class="fu">plot_hypnogram</span>(events)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">&quot;https://rsleep.org/data/15012016HD.csv&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">&quot;15012016HD.csv&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>events <span class="ot">&lt;-</span> rsleep<span class="sc">::</span><span class="fu">read_events_noxturnal</span>(<span class="st">&quot;15012016HD.csv&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>rsleep<span class="sc">::</span><span class="fu">plot_hypnogram</span>(events)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>The hypnogram show sleep stages over time using consecutive 30
 seconds epochs. This record was manually scored by well-trained

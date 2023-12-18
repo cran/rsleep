@@ -143,18 +143,15 @@ plot_hypnogram <- function(events, labels = c("N3","N2","N1","REM","AWA")){
 #' @param plot Plot the hypnogram or in not using \code{ggplot2}.
 #' @return Hypnogram dataframe or plot.
 #' @examples
-#' fpath <- paste0(tempdir(),"SC4001EC-Hypnogram.edf")
+#' fpath <- paste0(tempdir(),"/15012016HD.csv")
+#'
+#' download.file("https://rsleep.org/data/15012016HD.csv",fpath, method="curl")
 #' 
-#' furl <- paste0("https://www.physionet.org/files/sleep-edfx/1.0.0/",
-#'  "sleep-cassette/SC4001EC-Hypnogram.edf?download")
-#'  
-#' download.file(furl,fpath)
-#' 
-#' events <- read_events_sleepedfx(fpath)
+#' events <- read_events_noxturnal(fpath)
 #' 
 #' unlink(fpath)
 #' 
-#' hypnogram(events, plot = TRUE)
+#' hypnogram(events)
 #' @export
 hypnogram <- function(
     events,
@@ -308,6 +305,8 @@ smooth_hypnogram <- function(
 #' @export
 smooth_liang2012 <- function(hypnogram){
 
+  hypnogram$event = as.character(hypnogram$event)
+  
   # Rule 1: Any REM epochs before the very first appearance of S2 are replaced
   # with S1 epochs.
   hypnogram$event[hypnogram$event == "REM" &&
@@ -354,7 +353,9 @@ smooth_liang2012 <- function(hypnogram){
       hypnogram$event[i:(i+2)] <- c("MOV","N1","N2")
     }
   }
-
+  
+  hypnogram = rsleep::hypnogram(hypnogram)
+  
   hypnogram
 }
 

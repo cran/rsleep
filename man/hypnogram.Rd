@@ -30,16 +30,13 @@ Hypnogram dataframe or plot.
 Remove non-sleep stages events and reorder dataframe rows using the \code{begin} column.
 }
 \examples{
-fpath <- paste0(tempdir(),"SC4001EC-Hypnogram.edf")
+fpath <- paste0(tempdir(),"/15012016HD.csv")
 
-furl <- paste0("https://www.physionet.org/files/sleep-edfx/1.0.0/",
- "sleep-cassette/SC4001EC-Hypnogram.edf?download")
- 
-download.file(furl,fpath)
+download.file("https://rsleep.org/data/15012016HD.csv",fpath, method="curl")
 
-events <- read_events_sleepedfx(fpath)
+events <- read_events_noxturnal(fpath)
 
 unlink(fpath)
 
-hypnogram(events, plot = TRUE)
+hypnogram(events)
 }

@@ -135,42 +135,40 @@ write_hypnogram_compumedics <- function(hypnogram, filename){
 #' @return A dataframe of scored events.
 #' @export
 read_events_noxturnal <- function(dir){
-
-  events <- tryCatch({
-    utils::read.csv(dir,
-                    fileEncoding = "UTF-8")
-  },
-  # nocov start
-  error = function(e){
-    utils::read.csv(dir, fileEncoding = "UTF-16")
-  },
-  # nocov end
-  warning = function(e){
-    utils::read.csv(dir,
-                    fileEncoding = "UTF-16")
+  
+  suppressWarnings({
+  events <- readr::read_csv(
+    dir, show_col_types = FALSE,
+    col_names = c("begin","end","event","duration"),
+    locale = readr::locale(encoding = "UTF-16LE"), skip = 1)
+  })
+  
+  if (ncol(events) < 4) {
+    stop(paste0(
+      "Noxturnal events file must have at least 4 columns. Number of columns: ",
+      ncol(events),"."))
   }
-  )
 
   events <- events[,1:4]
   if(events[1,1][1] == "[]"){
     events <- events[-1,]
   }
 
-  for (i in 1:4){
-    if(colnames(events)[i] == "Heure.de.d.but" | colnames(events)[i] == paste0("Heure.de.d","\u00E9","but")){
-      colnames(events)[i] <- "begin"
-      events$begin <- strptime(events$begin, format = "%d/%m/%Y %H:%M:%S")
-    } else if(colnames(events)[i] == "Heure.de.fin") {
-      colnames(events)[i] <- "end"
-      events$end <- strptime(events$end, format = "%d/%m/%Y %H:%M:%S")
-    } else if(colnames(events)[i] == "X.v.nement" | colnames(events)[i] == paste0("\u00C9","v","\u00E9","nement")) {
-      colnames(events)[i] <- "event"
-      events$event <- as.character(events$event)
-    } else if(colnames(events)[i] == "Dur.e" | colnames(events)[i] == paste0("Dur","\u00E9","e")) {
-      colnames(events)[i] <- "duration"
-      events$duration <- as.numeric(events$duration)
-    }
-  }
+  # for (i in 1:4){
+  #   if(colnames(events)[i] == "Heure.de.d.but" | colnames(events)[i] == paste0("Heure.de.d","\u00E9","but")){
+  #     colnames(events)[i] <- "begin"
+       events$begin <- strptime(events$begin, format = "%d/%m/%Y %H:%M:%S")
+  #   } else if(colnames(events)[i] == "Heure.de.fin") {
+  #     colnames(events)[i] <- "end"
+       events$end <- strptime(events$end, format = "%d/%m/%Y %H:%M:%S")
+  #   } else if(colnames(events)[i] == "X.v.nement" | colnames(events)[i] == paste0("\u00C9","v","\u00E9","nement")) {
+  #     colnames(events)[i] <- "event"
+  #     events$event <- as.character(events$event)
+  #   } else if(colnames(events)[i] == "Dur.e" | colnames(events)[i] == paste0("Dur","\u00E9","e")) {
+  #     colnames(events)[i] <- "duration"
+       events$duration <- as.numeric(events$duration)
+  #   }
+  # }
 
   events$duration <- NULL
   events$event[events$event == "?veil"] <- paste0("\u00C9","veil")
@@ -193,7 +191,7 @@ read_events_noxturnal <- function(dir){
   events$event[events$event == "Ventre"] <- "stomach"
 
   # Normalize Cycles
-  events <- rbind(events,normalize_cycles(events))
+  events <- rbind(events,rsleep::normalize_cycles(events))
 
   events$event = as.character(events$event)
   
@@ -248,17 +246,21 @@ read_events_sleepedfx <- function(dir, update = TRUE){
 #'
 #' @param txt txt file path.
 #' @param startTime Character string or date object of the hypnogram start.
+#' @param labels Labels and values as a named list. Defaults to c("AWA" = 0, "N1" = 1, "N2" = 2, "N3" = 3, "REM" = 5).
 #' @return A dataframe of stages.
 #' @export
-read_events_compumedics <- function(txt, startTime){
+read_events_compumedics <- function(
+    txt, startTime, labels = c("AWA" = 0, "N1" = 1, "N2" = 2, "N3" = 3, "REM" = 5)){
   hypno <- utils::read.table(txt, stringsAsFactors = FALSE, col.names = "event")
   hypno$begin <- as.POSIXlt(startTime) + ((c(1:nrow(hypno))-1)*4)
   hypno$end <- hypno$begin+4
   hypno$event <- as.character(hypno$event)
-  hypno$event <- ifelse(hypno$event == "0","AWA",hypno$event)
-  hypno$event <- ifelse(hypno$event == "1","NREM",hypno$event)
-  hypno$event <- ifelse(hypno$event == "2","REM",hypno$event)
-  hypno$event <- ifelse(hypno$event == "?","AWA",hypno$event)
+  for(label in names(labels)){
+    hypno$event <- ifelse(hypno$event == as.character(labels[label]),label,hypno$event)
+  }
+  # hypno$event <- ifelse(hypno$event == "1","NREM",hypno$event)
+  # hypno$event <- ifelse(hypno$event == "2","REM",hypno$event)
+  # hypno$event <- ifelse(hypno$event == "?","AWA",hypno$event)
   hypno
 }
 

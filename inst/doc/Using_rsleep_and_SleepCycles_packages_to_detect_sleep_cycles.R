@@ -1,9 +1,13 @@
 ## ----env, include = FALSE-----------------------------------------------------
+
 options(scipen=999)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
 
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>")
+
 
 ## ----hypnogram, echo=FALSE, message=FALSE, warning=FALSE----------------------
 library(rsleep)

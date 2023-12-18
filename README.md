@@ -7,16 +7,15 @@ rsleep: A R package for sleep data analysis
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7416363.svg)](https://doi.org/10.5281/zenodo.7416363)
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/boupetch)
 
-rsleep is a multiplatform open-source R package providing a toolbox for sleep data processing,
-visualization and analysis. rsleep provides tools for state of the art automatic sleep stages scoring.
+rsleep: Open-source, multiplatform R package for advanced sleep data analysis. Features automatic sleep scoring and sophisticated visualization tools.
 
 ## Installation
 
 Development version can be directly installed from
-[Github](https://github.com/) using the `devtools` package :
+[Github](https://github.com/boupetch/rsleep) :
 
 ``` r
-devtools::install_github("boupetch/rsleep")
+remotes::install_github("boupetch/rsleep@dev")
 ```
 
 Stable version can be downloaded and installed from
@@ -74,7 +73,9 @@ library(rsleep)
 }
 ```
 
-## rsleep usage in scientific litterature
+## Reverse bibliography
+
+- Baur, D. M., Dornbierer, D. A., & Landolt, H.-P. [Concentration-effect relationships of plasma caffeine on EEG delta power and cardiac autonomic activity during human sleep. Cold Spring Harbor Laboratory.](https://www.medrxiv.org/content/10.1101/2023.10.14.23297036v1)
 
 - Wolf, M.C., Klein, P., Kulau, U., Richter, C. and Wolf, K.H., [DR. BEAT: First Insights into a Study to Collect Baseline BCG Data with a Sensor-Based Wearable Prototype in Heart-Healthy Adults.](https://arinex.com.au/EMBC/pdf/full-paper_271.pdf)
 
