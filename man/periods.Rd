@@ -24,6 +24,7 @@ A dataframe of periods with their begin and stop times, duration and stages for 
 Get a dataframe of sleep periods from a hypnogram, continuous or by stages.
 }
 \examples{
+tryCatch({
 library(ggplot2)
 
 download.file(
@@ -43,4 +44,7 @@ ggplot(periods_continuous, aes(x=duration)) + geom_histogram(bins = 30)
 periods_stages <- periods(events, mode = "stages")
  
 ggplot(periods_stages, aes(x=event,y=duration,color=event)) + geom_boxplot()
+}, error = function(e) {
+  print("Error executing this example, check your internet connection.")
+  })
 }

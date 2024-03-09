@@ -96,13 +96,15 @@ bands <- lapply(epochs,function(x){
                    c(3.5,7.5), # Theta
                    c(7.5,13), # Alpha
                    c(13,30)), # Beta
-      signal = x, sRate = s$sRate)
+      signal = x, sRate = s$sRate, normalize = TRUE)
 })
 
 ## ----bands_reshape------------------------------------------------------------
+
 bands_df <- data.frame(matrix(unlist(bands), nrow=length(bands), byrow=TRUE))
 
 colnames(bands_df) <- c("Delta","Theta","Alpha","Beta")
+
 
 ## ----bands_stages-------------------------------------------------------------
 bands_df$stage <- rsleep::hypnogram(events)$event
@@ -120,4 +122,28 @@ ggplot(bands_df_long,
                       values = palette) +
   theme_bw() + xlab("") + ylab("PSD") + 
   theme(legend.position = "none")
+
+## ----delta_overnight----------------------------------------------------------
+
+bands_df$stage = NULL
+
+bands_df_normalized = as.data.frame(sapply(bands_df, function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}))
+
+bands_df_normalized$epoch = c(1:nrow(bands_df_normalized))
+
+long_bands_df_normalized <- reshape2::melt(
+  bands_df_normalized, id.vars = "epoch")
+
+ggplot(
+  long_bands_df_normalized, 
+  aes(x = epoch, y = value, color = variable)) +
+  geom_line(size = 0.4) +
+  labs(title = "Bands power overnight", x = "Epoch ", y = "PSD") +
+  theme_minimal() +
+  scale_color_manual(values = c("#00A08A", "#F2AD00", "#F98400", "#5BBCD6")
+) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
 

@@ -24,6 +24,7 @@ Count of stages transitions in selected format.
 Count and format stages transitions.
 }
 \examples{
+tryCatch({
 download.file("https://rsleep.org/data/hypnodensity.csv", "hypnodensity.csv")
 
 hypnodensity <- read.csv2("hypnodensity.csv")
@@ -48,7 +49,9 @@ round(
     events, 
     format = "dataframe")/(
       sum(transitions(events)))*100,2)
-      
+}, error = function(e) {
+  print("Error executing this example, check your internet connection.")
+  })
 }
 \references{
 Swihart BJ, Punjabi NM, Crainiceanu CM. Modeling sleep fragmentation in sleep hypnograms: An instance of fast, scalable discrete-state, discrete-time analyses. Comput Stat Data Anal. 2015 Sep;89:1-11. doi: 10.1016/j.csda.2015.03.001. PMID: 27182097; PMCID: PMC4865264.

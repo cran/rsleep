@@ -6,7 +6,7 @@
 \usage{
 read_events_compumedics(
   txt,
-  startTime,
+  startTime = as.POSIXlt("2000-01-01"),
   labels = c(AWA = 0, N1 = 1, N2 = 2, N3 = 3, REM = 5)
 )
 }

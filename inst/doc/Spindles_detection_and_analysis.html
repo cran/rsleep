@@ -380,33 +380,34 @@ mostly during stage 2 of non-rapid eye movement (NREM) sleep.
 Characterized by their short duration, typically lasting between 0.5 to
 2 seconds, they appear as a rapid series of waves on an
 electroencephalogram (EEG). These waves are typically in the 11 to 16 Hz
-frequency range <span class="citation">[1]</span> . Sleep spindles are
-thought to play a crucial role in brain development, memory
-consolidation, and cognitive function. Their presence and
-characteristics can vary depending on age, cognitive factors, and
-certain neurological conditions, making them a significant focus in
-sleep research and neuroscience.</p>
+frequency range <span class="citation">De Gennaro and Ferrara
+(2003)</span> . Sleep spindles are thought to play a crucial role in
+brain development, memory consolidation, and cognitive function. Their
+presence and characteristics can vary depending on age, cognitive
+factors, and certain neurological conditions, making them a significant
+focus in sleep research and neuroscience.</p>
 <p>While EEG-based visual inspection remains the benchmark for
 identifying these spindles, this process is not only labor-intensive and
 expensive but also prone to variability and bias among different
 scorers. An algorithm for sleep spindle detection significantly
 streamline this process, enhancing both efficiency and consistency in
 spindle identification.</p>
-<p>The A7 algorithm <span class="citation">[2]</span> operates using a
-single EEG channel and is dependent on four objective key parameters:
-the absolute power of the sigma band, its relative power, and the
-correlation or covariance between the sigma band-passed signal and the
-original EEG signal.</p>
+<p>The A7 algorithm <span class="citation">Lacourse et al. (2019)</span>
+operates using a single EEG channel and is dependent on four objective
+key parameters: the absolute power of the sigma band, its relative
+power, and the correlation or covariance between the sigma band-passed
+signal and the original EEG signal.</p>
 <div id="sleep-data" class="section level1">
 <h1>Sleep data</h1>
 <div id="eeg-signal" class="section level2">
 <h2>EEG signal</h2>
 <p>First, download and read an single EEG signal from an example EDF
-<span class="citation">[3]</span> file. According to the standardized
-10-20 system <span class="citation">[4]</span>, the <code>C3-M2</code>
-derivation refers to the measurement of electrical brain activity
-recorded between the C3 electrode position on the left side of the head
-and the M2 electrode positioned on the right mastoid.</p>
+<span class="citation">Kemp et al. (1992)</span> file. According to the
+standardized 10-20 system <span class="citation">Niedermeyer and Lopes
+da Silva (2005)</span>, the <code>C3-M2</code> derivation refers to the
+measurement of electrical brain activity recorded between the C3
+electrode position on the left side of the head and the M2 electrode
+positioned on the right mastoid.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(edfReader)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
@@ -528,31 +529,29 @@ using <code>ggplot2</code>:</p>
 <span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;N2 epoch number&quot;</span>) <span class="sc">+</span></span>
 <span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Detected spindles&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<div id="refs" class="references csl-bib-body">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-DeGennaro2003" class="csl-entry">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">L.
-De Gennaro, M. Ferrara, Sleep spindles: An overview, Sleep Medicine
-Reviews. 7 (2003) 423–440. https://doi.org/<a href="https://doi.org/10.1053/smrv.2002.0252">10.1053/smrv.2002.0252</a>.</div>
-</div>
-<div id="ref-Lacourse2019" class="csl-entry">
-<div class="csl-left-margin">[2] </div><div class="csl-right-inline">K.
-Lacourse, J. Delfrate, J. Beaudry, P. Peppard, S.C. Warby, A sleep
-spindle detection algorithm that emulates human expert spindle scoring,
-Journal of Neuroscience Methods. 316 (2019) 3–11. https://doi.org/<a href="https://doi.org/10.1016/j.jneumeth.2018.08.014">10.1016/j.jneumeth.2018.08.014</a>.</div>
+De Gennaro, Luigi, and Michele Ferrara. 2003. <span>“Sleep Spindles: An
+Overview.”</span> <em>Sleep Medicine Reviews</em> 7 (5): 423–40. <a href="https://doi.org/10.1053/smrv.2002.0252">https://doi.org/10.1053/smrv.2002.0252</a>.
 </div>
 <div id="ref-Kemp1992" class="csl-entry">
-<div class="csl-left-margin">[3] </div><div class="csl-right-inline">B.
-Kemp, A. Värri, A.C. Rosa, K.D. Nielsen, J. Gade, <span class="nocase">A
-simple format for exchange of digitized polygraphic recordings</span>,
-Electroencephalography and Clinical Neurophysiology. 82 (1992) 391–393.
-https://doi.org/<a href="https://doi.org/10.1016/0013-4694(92)90009-7">10.1016/0013-4694(92)90009-7</a>.</div>
+Kemp, Bob, Alpo Värri, Agostinho C. Rosa, Kim D. Nielsen, and John Gade.
+1992. <span>“<span class="nocase">A simple format for exchange of
+digitized polygraphic recordings</span>.”</span>
+<em>Electroencephalography and Clinical Neurophysiology</em> 82 (5):
+391–93. <a href="https://doi.org/10.1016/0013-4694(92)90009-7">https://doi.org/10.1016/0013-4694(92)90009-7</a>.
+</div>
+<div id="ref-Lacourse2019" class="csl-entry">
+Lacourse, Karine, Jacques Delfrate, Julien Beaudry, Paul Peppard, and
+Simon C. Warby. 2019. <span>“A Sleep Spindle Detection Algorithm That
+Emulates Human Expert Spindle Scoring.”</span> <em>Journal of
+Neuroscience Methods</em> 316 (March): 3–11. <a href="https://doi.org/10.1016/j.jneumeth.2018.08.014">https://doi.org/10.1016/j.jneumeth.2018.08.014</a>.
 </div>
 <div id="ref-niedermeyerElectroencephalographyBasicPrinciples2005" class="csl-entry">
-<div class="csl-left-margin">[4] </div><div class="csl-right-inline">E.
-Niedermeyer, F.H. Lopes da Silva, eds., Electroencephalography: Basic
-principles, clinical applications, and related fields, 5th ed,
-<span>Lippincott Williams &amp; Wilkins</span>,
-<span>Philadelphia</span>, 2005.</div>
+Niedermeyer, Ernst, and F. H. Lopes da Silva, eds. 2005.
+<em>Electroencephalography: Basic Principles, Clinical Applications, and
+Related Fields</em>. 5th ed. <span>Philadelphia</span>: <span>Lippincott
+Williams &amp; Wilkins</span>.
 </div>
 </div>
 </div>

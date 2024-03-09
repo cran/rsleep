@@ -56,41 +56,44 @@ and `step` size parameters.
 \deqn{A7sigmaCor = \frac{\text{cov}(EEG_{bf}, EEG_{\sigma})}{sd_{EEG_{bf}} * sd_{EEG_{\sigma}}}}
 }
 \examples{
-fpath <- paste0(tempdir(),"c3m2_n2_200hz_uv.csv")
+tryCatch({
+  fpath <- paste0(tempdir(),"c3m2_n2_200hz_uv.csv")
 
-download.file(
-  url = "https://rsleep.org/data/c3m2_n2_200hz_uv.csv",
-  destfile = fpath)
+  download.file(
+    url = "https://rsleep.org/data/c3m2_n2_200hz_uv.csv",
+    destfile = fpath)
 
-# Read only a sample of the EEG signal
-s = read.csv(fpath,header = FALSE)[,1][25000:45000]
+  # Read only a sample of the EEG signal
+  s = read.csv(fpath,header = FALSE)[,1][25000:45000]
 
-file.remove(fpath)
+  file.remove(fpath)
 
-a7_results = a7(s, 200)
+  a7_results = a7(s, 200)
 
-# Plot the first detected spindle
-data = data.frame(x=s,index=seq_along(s))
-a = a7_results$spindles$idxStart[1]
-b = a7_results$spindles$idxEnd[1]
-data = data[(data$index <= (b+600)) & (data$index >= (a-600)), ]
-library(ggplot2)
-ggplot(data, aes(x = index, y = x)) +
- geom_line() +
- geom_line(data = subset(data, index >= a & index <= b), aes(x = index, y = x), color = "red") +
- labs(x = "Signal index", y = "C3-M2") +
- theme_minimal()
+  # Plot the first detected spindle
+  data = data.frame(x=s,index=seq_along(s))
+  a = a7_results$spindles$idxStart[1]
+  b = a7_results$spindles$idxEnd[1]
+  data = data[(data$index <= (b+600)) & (data$index >= (a-600)), ]
+  library(ggplot2)
+  ggplot(data, aes(x = index, y = x)) +
+    geom_line() +
+    geom_line(data = subset(data, index >= a & index <= b), aes(x = index, y = x), color = "red") +
+    labs(x = "Signal index", y = "C3-M2") +
+    theme_minimal()
   
-# Visualise features distribution 
+  # Visualise features distribution 
 
-hist(a7_results$df$absSigPow,main = "A7absSigPow")
+  hist(a7_results$df$absSigPow,main = "A7absSigPow")
 
-hist(a7_results$df$relSigPow,main = "A7relSigPow")
+  hist(a7_results$df$relSigPow,main = "A7relSigPow")
 
-hist(a7_results$df$sigmaCov,main = "A7sigmaCov")
+  hist(a7_results$df$sigmaCov,main = "A7sigmaCov")
 
-hist(a7_results$df$sigmaCorr,main = "A7sigmaCorr") 
-
+  hist(a7_results$df$sigmaCorr,main = "A7sigmaCorr") 
+ }, error = function(e) {
+  print("Error executing this example, check your internet connection.")
+  })
 }
 \references{
 Lacourse, K., Delfrate, J., Beaudry, J., Peppard, P., & Warby, S. C. (2019). A sleep spindle detection algorithm that emulates human expert spindle scoring. In Journal of Neuroscience Methods (Vol. 316, pp. 3–11). Elsevier BV. https://doi.org/10.1016/j.jneumeth.2018.08.014

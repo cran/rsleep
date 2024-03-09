@@ -12,7 +12,7 @@
 
 
 
-<title>Spectral analysis of sleep EEG signals</title>
+<title>Spectral analysis of sleep electroencephalography</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -358,7 +358,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Spectral analysis of sleep EEG signals</h1>
+<h1 class="title toc-ignore">Spectral analysis of sleep
+electroencephalography</h1>
 
 
 <div id="TOC">
@@ -377,23 +378,25 @@ profiles</a></li>
 </div>
 
 <p>This vignette provides a basic introduction to spectral analysis of
-Electroencephalography (EEG) signal from a sleep record file.</p>
+electroencephalography (EEG) signal from a sleep record file.</p>
 <p>EEG refers to all the methods of recording, analysis and
 interpretation of the electrical activity of the brain. In clinical EEG,
 multiple electrodes are usually placed on the scalp, measuring its
 superficial activity over time. Electrodes are typically arranged using
-the standardized International 10-20 system <span class="citation">[1]</span>, in order to enhance analysis
-reproducibility.</p>
+the standardized International 10-20 system <span class="citation">Niedermeyer and Lopes da Silva (2005)</span>, in order
+to enhance analysis reproducibility.</p>
 <p>EEG is a major component in sleep analysis. Sleep stages, such as
 slow wave sleep or paradoxical sleep are partly defined over visual EEG
-characteristics <span class="citation">[2]</span>. Many sleep related
-disorders can be identified in EEG data. Polysomnography (PSG), the gold
-standard exam in sleep medicine, includes EEG along many other
-physiological signals <span class="citation">[3]</span>.</p>
+characteristics <span class="citation"><span>“<span>AASM Scoring
+Manual</span> - <span>American Academy</span> of <span>Sleep
+Medicine</span>”</span> (n.d.)</span>. Many sleep related disorders can
+be identified in EEG data. Polysomnography (PSG), the gold standard exam
+in sleep medicine, includes EEG along many other physiological signals
+<span class="citation">Ibáñez, Silva, and Cauli (2018)</span>.</p>
 <div id="sleep-data" class="section level2">
 <h2>Sleep data</h2>
 <p>Sleep records are usually stored using European Data Format (EDF)
-<span class="citation">[4]</span>. The R package <a href="https://CRAN.R-project.org/package=edfReader"><code>edfReader</code></a>
+<span class="citation">Kemp et al. (1992)</span>. The R package <a href="https://CRAN.R-project.org/package=edfReader"><code>edfReader</code></a>
 reads <code>.edf</code> files. Reading an <code>.edf</code> file takes
 two steps: First reading the headers of the file, then reading the
 selected signals. The following spectral analysis will be performed on a
@@ -435,8 +438,9 @@ version from Github.</p>
 <p>The hypnogram show sleep stages over time using consecutive 30
 seconds epochs. This record was manually scored by well-trained
 technicians according to the American Academy of Sleep Medicine manual
-<span class="citation">[2]</span>. Five sleep stages can be
-observed:</p>
+<span class="citation"><span>“<span>AASM Scoring Manual</span> -
+<span>American Academy</span> of <span>Sleep Medicine</span>”</span>
+(n.d.)</span>. Five sleep stages can be observed:</p>
 <ul>
 <li><strong>AWA</strong>: Awakeness.</li>
 <li><strong>REM</strong>: Rapid-Eye-Movement (REM) sleep, or paradoxical
@@ -448,7 +452,7 @@ sleep, highlighted in red.</li>
 <p>Visual scoring is an empirical science requiring a considerable
 amount of knowledge and training. Alternative methods like spectral
 estimations techniques such as the Fourier transform must be used to
-quantify information carried in the physiological signals <span class="citation">[5]</span>.</p>
+quantify information carried in the physiological signals <span class="citation">Tong and Thakor (2009)</span>.</p>
 </div>
 <div id="epoching" class="section level2">
 <h2>Epoching</h2>
@@ -540,7 +544,7 @@ stages.</p>
 <div id="bands" class="section level2">
 <h2>Bands</h2>
 <p>The traditional way to simplify the EEG periodogram is to cut the
-frequencies of the spectrum into bands or ranges <span class="citation">[1]</span>:</p>
+frequencies of the spectrum into bands or ranges <span class="citation">Niedermeyer and Lopes da Silva (2005)</span>:</p>
 <ul>
 <li><p><strong>Delta</strong>: Below <code>3.5</code> Hertz, the Delta
 band is associated with slow-wave sleep in adults subjects.</p></li>
@@ -554,7 +558,9 @@ and eyes closed.</p></li>
 <code>30</code> Hertz the Beta band is associated with active thinking,
 focus, high alert or anxiousness.</p></li>
 <li><p><strong>Gamma</strong>: Over <code>30</code> Hertz the Gamma band
-is mostly used for animal EEG analysis.</p></li>
+is where are the fastest and less understood waves. They are thought to
+be involved in higher mental activities and integration of
+information.</p></li>
 </ul>
 <p>Bands can be computed using the <code>bands_psd</code> of the
 <code>rsleep</code> package. Those bands can be normalized by the
@@ -565,13 +571,14 @@ spectrum range covered by the bands.</p>
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>                   <span class="fu">c</span>(<span class="fl">3.5</span>,<span class="fl">7.5</span>), <span class="co"># Theta</span></span>
 <span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>                   <span class="fu">c</span>(<span class="fl">7.5</span>,<span class="dv">13</span>), <span class="co"># Alpha</span></span>
 <span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>                   <span class="fu">c</span>(<span class="dv">13</span>,<span class="dv">30</span>)), <span class="co"># Beta</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>      <span class="at">signal =</span> x, <span class="at">sRate =</span> s<span class="sc">$</span>sRate)</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>      <span class="at">signal =</span> x, <span class="at">sRate =</span> s<span class="sc">$</span>sRate, <span class="at">normalize =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>})</span></code></pre></div>
 <p>As <code>lapply</code> returns a list, results must be reshaped in
 order to obtain a dataframe object.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>bands_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(bands), <span class="at">nrow=</span><span class="fu">length</span>(bands), <span class="at">byrow=</span><span class="cn">TRUE</span>))</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">colnames</span>(bands_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Delta&quot;</span>,<span class="st">&quot;Theta&quot;</span>,<span class="st">&quot;Alpha&quot;</span>,<span class="st">&quot;Beta&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>bands_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="fu">unlist</span>(bands), <span class="at">nrow=</span><span class="fu">length</span>(bands), <span class="at">byrow=</span><span class="cn">TRUE</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">colnames</span>(bands_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Delta&quot;</span>,<span class="st">&quot;Theta&quot;</span>,<span class="st">&quot;Alpha&quot;</span>,<span class="st">&quot;Beta&quot;</span>)</span></code></pre></div>
 <p>Stages can be retreived from the hypnogram.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>bands_df<span class="sc">$</span>stage <span class="ot">&lt;-</span> rsleep<span class="sc">::</span><span class="fu">hypnogram</span>(events)<span class="sc">$</span>event</span></code></pre></div>
 <p>Now that the epochs bands PSD and their corresponding stages are
@@ -590,40 +597,67 @@ stored in a dataframe, they can easily be plotted using boxplots from
 <span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;PSD&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Once normalized, bands powers displayed over epoch numbers reveals
+the dynamic interplay of brain activity overnight.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>bands_df<span class="sc">$</span>stage <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>bands_df_normalized <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">sapply</span>(bands_df, <span class="cf">function</span>(x) {</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="fu">return</span>((x <span class="sc">-</span> <span class="fu">min</span>(x)) <span class="sc">/</span> (<span class="fu">max</span>(x) <span class="sc">-</span> <span class="fu">min</span>(x)))</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>}))</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>bands_df_normalized<span class="sc">$</span>epoch <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(bands_df_normalized))</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>long_bands_df_normalized <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>  bands_df_normalized, <span class="at">id.vars =</span> <span class="st">&quot;epoch&quot;</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>  long_bands_df_normalized, </span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> epoch, <span class="at">y =</span> value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bands power overnight&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Epoch &quot;</span>, <span class="at">y =</span> <span class="st">&quot;PSD&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#00A08A&quot;</span>, <span class="st">&quot;#F2AD00&quot;</span>, <span class="st">&quot;#F98400&quot;</span>, <span class="st">&quot;#5BBCD6&quot;</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="co">#&gt; Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="co">#&gt; ℹ Please use `linewidth` instead.</span></span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="co">#&gt; This warning is displayed once every 8 hours.</span></span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="co">#&gt; Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="co">#&gt; generated.</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body">
-<div id="ref-niedermeyerElectroencephalographyBasicPrinciples2005" class="csl-entry">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">E.
-Niedermeyer, F.H. Lopes da Silva, eds., Electroencephalography: Basic
-principles, clinical applications, and related fields, 5th ed,
-<span>Lippincott Williams &amp; Wilkins</span>,
-<span>Philadelphia</span>, 2005.</div>
-</div>
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-AASMScoringManual" class="csl-entry">
-<div class="csl-left-margin">[2] </div><div class="csl-right-inline"><span>AASM Scoring Manual</span> -
-<span>American Academy</span> of <span>Sleep Medicine</span>, American
-Academy of Sleep Medicine Association for Sleep Clinicians and
-Researchers. (n.d.).</div>
+<span>“<span>AASM Scoring Manual</span> - <span>American Academy</span>
+of <span>Sleep Medicine</span>.”</span> n.d. <em>American Academy of
+Sleep Medicine Association for Sleep Clinicians and Researchers</em>.
+https://aasm.org/clinical-resources/scoring-manual/.
 </div>
 <div id="ref-ibanezSurveySleepAssessment2018" class="csl-entry">
-<div class="csl-left-margin">[3] </div><div class="csl-right-inline">V.
-Ibáñez, J. Silva, O. Cauli, A survey on sleep assessment methods, PeerJ.
-6 (2018) e4849. https://doi.org/<a href="https://doi.org/10.7717/peerj.4849">10.7717/peerj.4849</a>.</div>
+Ibáñez, Vanessa, Josep Silva, and Omar Cauli. 2018. <span>“A Survey on
+Sleep Assessment Methods.”</span> <em>PeerJ</em> 6 (May): e4849. <a href="https://doi.org/10.7717/peerj.4849">https://doi.org/10.7717/peerj.4849</a>.
 </div>
 <div id="ref-Kemp1992" class="csl-entry">
-<div class="csl-left-margin">[4] </div><div class="csl-right-inline">B.
-Kemp, A. Värri, A.C. Rosa, K.D. Nielsen, J. Gade, <span class="nocase">A
-simple format for exchange of digitized polygraphic recordings</span>,
-Electroencephalography and Clinical Neurophysiology. 82 (1992) 391–393.
-https://doi.org/<a href="https://doi.org/10.1016/0013-4694(92)90009-7">10.1016/0013-4694(92)90009-7</a>.</div>
+Kemp, Bob, Alpo Värri, Agostinho C. Rosa, Kim D. Nielsen, and John Gade.
+1992. <span>“<span class="nocase">A simple format for exchange of
+digitized polygraphic recordings</span>.”</span>
+<em>Electroencephalography and Clinical Neurophysiology</em> 82 (5):
+391–93. <a href="https://doi.org/10.1016/0013-4694(92)90009-7">https://doi.org/10.1016/0013-4694(92)90009-7</a>.
+</div>
+<div id="ref-niedermeyerElectroencephalographyBasicPrinciples2005" class="csl-entry">
+Niedermeyer, Ernst, and F. H. Lopes da Silva, eds. 2005.
+<em>Electroencephalography: Basic Principles, Clinical Applications, and
+Related Fields</em>. 5th ed. <span>Philadelphia</span>: <span>Lippincott
+Williams &amp; Wilkins</span>.
 </div>
 <div id="ref-tongQuantitativeEEGAnalysis2009" class="csl-entry">
-<div class="csl-left-margin">[5] </div><div class="csl-right-inline">S.
-Tong, N.V. Thakor, eds., Quantitative <span>EEG</span> analysis methods
-and clinical applications, <span>Artech House</span>,
-<span>Boston</span>, 2009.</div>
+Tong, Shanbao, and Nitish Vyomesh Thakor, eds. 2009. <em>Quantitative
+<span>EEG</span> Analysis Methods and Clinical Applications</em>. Artech
+<span>House</span> Series Engineering in Medicine &amp; Biology.
+<span>Boston</span>: <span>Artech House</span>.
 </div>
 </div>
 </div>
